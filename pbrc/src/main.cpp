@@ -1,11 +1,16 @@
 #include <iostream>
 #include <cstdlib>
+
 #include "Datatypes.hpp"
 #include "BytestreamParser.hpp"
+#include "PushbotConnection.hpp"
+#include "Dialog.hpp"
 
+#include <QApplication>
 #include <QString>
 #include <QObject>
 #include <QThread>
+#include <QTimer>
 
 
 /* layout of the application: have a worker thread that parses the bytestream
@@ -34,8 +39,9 @@ void handle_event(const DVSEvent *ev) {
 	delete ev;
 }
 
-int
-main (int, char *[]) {
+
+void parser_test()
+{
 	using namespace nst;
 
 	// worker object
@@ -49,6 +55,35 @@ main (int, char *[]) {
 	for (const char c : test) {
 		parser.parse(c);
 	}
+}
 
-	return 0;
+void
+handle_socket_error(int socket_error, const QString &msg)
+{
+	std::cout << "Socket Error " << socket_error << ": " << msg.toStdString() << std::endl;
+}
+
+void
+handle_data_received(const QByteArray &) {
+
+}
+
+
+int
+connection_test(int argc, char *argv[])
+{
+	using namespace nst;
+	QApplication app(argc, argv);
+
+	// create a stupid dialog
+	Dialog dialog;
+	dialog.show();
+
+	return app.exec();
+}
+
+int
+main (int argc, char *argv[])
+{
+	return connection_test(argc, argv);
 }

@@ -10,7 +10,7 @@ BytestreamParser:: BytestreamParser(DVSEvent::timeformat_t fmt)
 }
 
 void BytestreamParser::
-parse(const char c)
+parse(const unsigned char c)
 {
 	switch (_state) {
 	// there may be either a regular character from a response string, or an
@@ -24,6 +24,8 @@ parse(const char c)
 			}
 			else {
 				if (!_response) {
+					// create a new string and reserve some
+					// space to speed up appending of items
 					_response = new QString();
 					_response->reserve(64);
 				}
@@ -85,6 +87,14 @@ parse(const char c)
 		break;
 	}
 
+}
+
+void BytestreamParser::
+set_timeformat(DVSEvent::timeformat_t fmt)
+{
+	// TODO: Check if we are outside state0 -> if so, this may introduce
+	// errors
+	_timeformat = fmt;
 }
 
 

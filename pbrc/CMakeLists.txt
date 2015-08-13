@@ -12,11 +12,15 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(SRC
 	src/main.cpp
 	src/BytestreamParser.cpp
+	src/PushbotConnection.cpp
+	src/Dialog.cpp
 )
 
 set(HEADERS
 	src/Datatypes.hpp
 	src/BytestreamParser.hpp
+	src/PushbotConnection.hpp
+	src/Dialog.hpp
 )
 
 find_package(Qt5Widgets REQUIRED)

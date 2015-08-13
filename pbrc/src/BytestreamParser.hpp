@@ -20,7 +20,11 @@ class BytestreamParser : public QObject
 public:
 	BytestreamParser(DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
 	virtual ~BytestreamParser() {}
-	void parse(const char c);
+	void parse(const unsigned char c);
+	void set_timeformat(DVSEvent::timeformat_t fmt);
+
+// TODO: slot for parse function that accepts an array
+	// void parse(const unsigned char *c, unsigned len);
 
 signals:
 	void event_received(const DVSEvent *ev);
