@@ -25,6 +25,7 @@ connect()
 	QObject::connect(_sock, &QTcpSocket::connected, this, &PushbotConnection::connected);
 	QObject::connect(_sock, &QTcpSocket::disconnected, this, &PushbotConnection::disconnected);
 	QObject::connect(_sock, &QTcpSocket::stateChanged, this, &PushbotConnection::onStateChanged);
+	QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::readyRead);
 	this->_sock->connectToHost("10.162.177.42", 56000);
 }
 
@@ -44,9 +45,19 @@ disconnect()
 
 
 void PushbotConnection::
+readyRead()
+{
+	if (!_sock) return;
+	auto data = _sock->readAll();
+	emit dataReady(std::move(data));
+}
+
+void PushbotConnection::
 connected()
 {
 	std::cout << "PushbotConnecton: connected" << std::endl;
+	_sock->write("!M+\n");
+	_sock->write("!MD0=40\n");
 }
 
 void PushbotConnection::

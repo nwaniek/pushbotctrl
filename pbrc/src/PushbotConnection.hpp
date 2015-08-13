@@ -15,18 +15,23 @@ public:
 	PushbotConnection(QObject *parent = 0);
 	virtual ~PushbotConnection();
 
+signals:
+	void dataReady(const QByteArray &data);
+
 public slots:
 	void connect();
 	void disconnect();
 
+
+
 private slots:
+	void readyRead();
 	void connected();
 	void disconnected();
 	void onStateChanged(QAbstractSocket::SocketState state);
 
 private:
 	QTcpSocket *_sock = nullptr;
-
 };
 
 

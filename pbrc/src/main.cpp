@@ -42,6 +42,7 @@ void handle_event(const DVSEvent *ev) {
 
 void parser_test()
 {
+	/*
 	using namespace nst;
 
 	// worker object
@@ -55,6 +56,7 @@ void parser_test()
 	for (const char c : test) {
 		parser.parse(c);
 	}
+	*/
 }
 
 void

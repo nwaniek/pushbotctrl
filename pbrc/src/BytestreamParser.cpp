@@ -19,7 +19,7 @@ parse(const unsigned char c)
 	case 0:
 		if ((c & 0x80) == 0) {
 			if (c == '\n') {
-				emit response_received(std::move(_response));
+				emit responseReceived(std::move(_response));
 				_response = nullptr;
 			}
 			else {
@@ -46,7 +46,7 @@ parse(const unsigned char c)
 		_ev->p = (static_cast<uint8_t>(c) & 0x80) >> 7;
 		_ev->y = static_cast<uint16_t>(c) & 0x7F;
 		if (_timeformat == DVSEvent::TIMEFORMAT_0BYTES) {
-			emit event_received(std::move(_ev));
+			emit eventReceived(std::move(_ev));
 			_state = 0;
 		}
 		else
@@ -64,7 +64,7 @@ parse(const unsigned char c)
 	case 3:
 		if (_timeformat == DVSEvent::TIMEFORMAT_2BYTES) {
 			_ev->t |= static_cast<uint64_t>(c);
-			emit event_received(std::move(_ev));
+			emit eventReceived(std::move(_ev));
 			_state = 0;
 		}
 		else {
@@ -75,7 +75,7 @@ parse(const unsigned char c)
 
 	case 4:
 		_ev->t |= static_cast<uint64_t>(c);
-		emit event_received(std::move(_ev));
+		emit eventReceived(std::move(_ev));
 		_state = 0;
 		break;
 
@@ -88,6 +88,15 @@ parse(const unsigned char c)
 	}
 
 }
+
+
+void BytestreamParser::
+parseData(const QByteArray &data)
+{
+	for (const char c: data)
+		this->parse(static_cast<unsigned char>(c));
+}
+
 
 void BytestreamParser::
 set_timeformat(DVSEvent::timeformat_t fmt)

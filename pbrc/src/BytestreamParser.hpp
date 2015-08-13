@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QByteArray>
 #include "Datatypes.hpp"
 
 // TODO: smart pointers for the response string and events?
@@ -20,17 +21,19 @@ class BytestreamParser : public QObject
 public:
 	BytestreamParser(DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
 	virtual ~BytestreamParser() {}
-	void parse(const unsigned char c);
 	void set_timeformat(DVSEvent::timeformat_t fmt);
 
-// TODO: slot for parse function that accepts an array
-	// void parse(const unsigned char *c, unsigned len);
+public slots:
+	void parseData(const QByteArray &data);
 
 signals:
-	void event_received(const DVSEvent *ev);
-	void response_received(const QString *str);
+	void eventReceived(const DVSEvent *ev);
+	void responseReceived(const QString *str);
 
 private:
+	void parse(const unsigned char c);
+
+
 	DVSEvent::timeformat_t _timeformat;
 	int _state;
 	QString *_response;
