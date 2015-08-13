@@ -14,6 +14,8 @@ set(SRC
 	src/BytestreamParser.cpp
 	src/PushbotConnection.cpp
 	src/Dialog.cpp
+	src/DVSEventWidget.cpp
+	src/NavigationWidget.cpp
 )
 
 set(HEADERS
@@ -21,6 +23,8 @@ set(HEADERS
 	src/BytestreamParser.hpp
 	src/PushbotConnection.hpp
 	src/Dialog.hpp
+	src/DVSEventWidget.hpp
+	src/NavigationWidget.hpp
 )
 
 find_package(Qt5Widgets REQUIRED)
