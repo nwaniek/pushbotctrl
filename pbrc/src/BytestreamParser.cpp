@@ -1,11 +1,11 @@
 #include "BytestreamParser.hpp"
-#include "pbrctypes.hpp"
 #include <iostream>
 #include <cstdlib>
 
+namespace nst {
 
-BytestreamParser:: BytestreamParser(DVSEventFormat fmt)
-: QObject(), _fmt(fmt), _state(0), _response(nullptr), _ev(nullptr)
+BytestreamParser:: BytestreamParser(DVSEvent::timeformat_t fmt)
+: QObject(), _timeformat(fmt), _state(0), _response(nullptr), _ev(nullptr)
 {
 }
 
@@ -33,14 +33,17 @@ parse(const char c)
 		else {
 			_ev = new DVSEvent;
 			_ev->x = static_cast<uint16_t>(c) & 0x7F;
+			_ev->y = 0;
+			_ev->p = 0;
+			_ev->t = 0;
 			++_state;
 		}
 		break;
 
 	case 1:
-		_ev->p = (static_cast<uint16_t>(c) & 0x80) >> 7;
+		_ev->p = (static_cast<uint8_t>(c) & 0x80) >> 7;
 		_ev->y = static_cast<uint16_t>(c) & 0x7F;
-		if (_fmt == EVENT_FORMAT_0BYTES) {
+		if (_timeformat == DVSEvent::TIMEFORMAT_0BYTES) {
 			emit event_received(std::move(_ev));
 			_state = 0;
 		}
@@ -49,7 +52,7 @@ parse(const char c)
 		break;
 
 	case 2:
-		if (_fmt == EVENT_FORMAT_2BYTES)
+		if (_timeformat == DVSEvent::TIMEFORMAT_2BYTES)
 			_ev->t |= static_cast<uint64_t>(c) << 8;
 		else
 			_ev->t |= static_cast<uint64_t>(c) << 16;
@@ -57,7 +60,7 @@ parse(const char c)
 		break;
 
 	case 3:
-		if (_fmt == EVENT_FORMAT_2BYTES) {
+		if (_timeformat == DVSEvent::TIMEFORMAT_2BYTES) {
 			_ev->t |= static_cast<uint64_t>(c);
 			emit event_received(std::move(_ev));
 			_state = 0;
@@ -85,4 +88,4 @@ parse(const char c)
 }
 
 
-
+} // nst::

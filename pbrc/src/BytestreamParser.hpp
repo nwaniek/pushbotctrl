@@ -3,9 +3,11 @@
 
 #include <QObject>
 #include <QString>
-#include "pbrctypes.hpp"
+#include "Datatypes.hpp"
 
 // TODO: smart pointers for the response string and events?
+
+namespace nst {
 
 /**
  * state machine to parse a bytestream. it will eventually emit an event when
@@ -16,7 +18,7 @@ class BytestreamParser : public QObject
 	Q_OBJECT
 
 public:
-	BytestreamParser(DVSEventFormat fmt = EVENT_FORMAT_0BYTES);
+	BytestreamParser(DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
 	virtual ~BytestreamParser() {}
 	void parse(const char c);
 
@@ -25,11 +27,13 @@ signals:
 	void response_received(const QString *str);
 
 private:
-	DVSEventFormat _fmt;
+	DVSEvent::timeformat_t _timeformat;
 	int _state;
 	QString *_response;
 	DVSEvent *_ev;
 };
+
+} // nst::
 
 
 #endif /* __BYTESTREAMPARSER_HPP__4FA5A548_1B33_4536_8BCA_39DE7D602068 */

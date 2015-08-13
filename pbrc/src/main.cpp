@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-#include "pbrctypes.hpp"
+#include "Datatypes.hpp"
 #include "BytestreamParser.hpp"
 
 #include <QString>
@@ -36,6 +36,8 @@ void handle_event(const DVSEvent *ev) {
 
 int
 main (int, char *[]) {
+	using namespace nst;
+
 	// worker object
 	BytestreamParser parser;
 

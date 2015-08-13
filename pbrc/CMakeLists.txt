@@ -15,7 +15,7 @@ set(SRC
 )
 
 set(HEADERS
-	src/pbrctypes.hpp
+	src/Datatypes.hpp
 	src/BytestreamParser.hpp
 )
 
