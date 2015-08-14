@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QColor>
 #include <algorithm>
+#include <iostream>
 
 namespace nst {
 
@@ -54,8 +55,9 @@ mouseMoveEvent(QMouseEvent *ev)
 	float y = ev->pos().y() - _center.y();
 
 	float snapdistance = 5.0;
-	float norm = sqrt(x*x + y*y);
+	float norm = sqrtf(x*x + y*y);
 	if (norm <= snapdistance) x = y = 0.0;
+
 
 	if (norm >= _radius) {
 		x = floor(x * _radius / norm);
@@ -73,7 +75,7 @@ mouseMoveEvent(QMouseEvent *ev)
 
 
 void NavigationWidget::
-paintEvent(QPaintEvent *ev)
+paintEvent(QPaintEvent * /*ev*/)
 {
 	// setup painter
 	QPainter p;

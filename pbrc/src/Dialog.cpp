@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 #include "Datatypes.hpp"
 #include "BytestreamParser.hpp"
@@ -42,39 +43,37 @@ Dialog(QWidget *parent) : QDialog(parent)
 	createThreads();
 }
 
-template <typename T>
-int sgn(T val)
-{
-	return (T(0) < val) - (val < T(0));
-}
+#define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
 
 void Dialog::
 onNavigationUpdate(const QPointF pos)
 {
-	// translate position from ([-1,1], [-1,1]) to a motor command
 	if (!_is_connected) return;
+	// translate position from ([-1,1], [-1,1]) to a motor command
 
 	// compute speeds
 	float max_speed = 100;
 	float norm = sqrt(pos.x() * pos.x() + pos.y() * pos.y());
-	float m0speed = max_speed * norm * (float)sgn(pos.x());
-	float m1speed = max_speed * norm * (float)sgn(pos.y());
+	float m0speed = - max_speed * norm * sgnf(pos.y());
+	float m1speed = - max_speed * norm * sgnf(pos.y());
 
 	// compute angle
 	float angle = atan2(pos.y(), pos.x());
-	float aangle = fabs(angle);
-	if (aangle < M_PI/2)
-		m1speed *= aangle / (M_PI/2);
+	float aangle = fabsf(angle);
+
+	float m0mul = 1.0f;
+	float m1mul = 1.0f;
+
+	if (aangle < M_PI / 2.0)
+		m0mul = aangle / (M_PI / 2.0);
 	else
-		m0speed *= (M_PI - aangle) / (M_PI / 2);
+		m1mul = (M_PI - aangle) / (M_PI / 2.0);
 
-	m0speed = floor(m0speed);
-	m1speed = floor(m1speed);
+	m0speed *= m0mul;
+	m1speed *= m1mul;
 
-	_con->sendCommand(new commands::MV0((int)m0speed));
-	_con->sendCommand(new commands::MV1((int)m1speed));
-
-	// std::cout << "navigation update (" << pos.x() << ", " << pos.y() << ")" << std::endl;
+	_con->sendCommand(new commands::MV0(static_cast<int>(m0speed)));
+	_con->sendCommand(new commands::MV1(static_cast<int>(m1speed)));
 }
 
 void Dialog::
@@ -87,7 +86,7 @@ createThreads() {
 
 	// connect the connection foo here
 	connect(_buttonConnect, &QPushButton::clicked, this, &Dialog::onConnectClicked);
-	connect(_buttonDisconnect, &QPushButton::clicked, _con, &PushbotConnection::disconnect, Qt::QueuedConnection);
+	connect(_buttonDisconnect, &QPushButton::clicked, this, &Dialog::onDisconnectClicked);
 
 	// create the parser thread
 	_parser_thread = new QThread();
@@ -152,6 +151,13 @@ void Dialog::
 onConnectClicked()
 {
 	_con->connect(_edtIP->text());
+}
+
+
+void Dialog::
+onDisconnectClicked()
+{
+	_con->disconnect();
 }
 
 } // nst::

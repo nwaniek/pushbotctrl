@@ -73,7 +73,7 @@ newEvent(const DVSEvent *ev)
 
 	// TODO: check if this function is called too often. If so,
 	// accumulate events to stop updating the image too frequently
-	_image->setPixel(ev->x, ev->y, ev->p ? COLOR_ON : COLOR_OFF);
+	_image->setPixel(ev->y, ev->x, ev->p ? COLOR_ON : COLOR_OFF);
 }
 
 

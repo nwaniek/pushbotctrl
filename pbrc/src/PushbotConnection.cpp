@@ -40,6 +40,11 @@ connect(const QString ip)
 void PushbotConnection::
 disconnect()
 {
+	if (thread() != QThread::currentThread()) {
+		QMetaObject::invokeMethod(this, "disconnect", Qt::QueuedConnection);
+		return;
+	}
+
 	// std::cout << "Pushbot: disconnect called" << std::endl;
 	if (!_sock) {
 		std::cout << "PushbotConnection: No socket" << std::endl;

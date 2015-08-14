@@ -28,6 +28,7 @@ public:
 
 private slots:
 	void onConnectClicked();
+	void onDisconnectClicked();
 
 	void onDVSEventReceived(const DVSEvent *ev);
 	void onResponseReceived(const QString *str);
