@@ -32,4 +32,4 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SRC} ${HEADERS_MOC} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Network)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Network m)

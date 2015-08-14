@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QMetaObject>
+#include <QString>
 #include <iostream>
 
 namespace nst {
@@ -29,7 +30,7 @@ signals:
 	void disconnected();
 
 public slots:
-	void connect();
+	void connect(const QString ip);
 	void disconnect();
 	void sendCommand(const commands::Command *cmd);
 

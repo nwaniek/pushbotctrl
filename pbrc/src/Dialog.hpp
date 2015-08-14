@@ -7,6 +7,8 @@
 class QPushButton;
 class QString;
 class QThread;
+class QLineEdit;
+
 
 namespace nst {
 
@@ -15,6 +17,7 @@ struct DVSEvent;
 class PushbotConnection;
 class BytestreamParser;
 class DVSEventWidget;
+class NavigationWidget;
 
 
 class Dialog : public QDialog
@@ -24,7 +27,7 @@ public:
 	Dialog(QWidget *parent = 0);
 
 private slots:
-	void btnCreateClicked();
+	void onConnectClicked();
 
 	void onDVSEventReceived(const DVSEvent *ev);
 	void onResponseReceived(const QString *str);
@@ -32,17 +35,24 @@ private slots:
 	void pushbotConnected();
 	void pushbotDisconnected();
 
+	void onNavigationUpdate(const QPointF pos);
+
 private:
-	QPushButton *_buttonCreate;
+	void createThreads();
+
+	QLineEdit *_edtIP;
 	QPushButton *_buttonConnect;
 	QPushButton *_buttonDisconnect;
 	DVSEventWidget *_dvswidget;
+	NavigationWidget *_navwidget;
 
 	QThread *_con_thread;
 	PushbotConnection *_con;
 
 	QThread *_parser_thread;
 	BytestreamParser *_parser;
+
+	bool _is_connected = false;
 };
 
 }

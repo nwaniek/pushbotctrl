@@ -20,14 +20,20 @@ PushbotConnection::
 
 
 void PushbotConnection::
-connect()
+connect(const QString ip)
 {
+	// make sure to call in the correct thread
+	if (thread() != QThread::currentThread()) {
+		QMetaObject::invokeMethod(this, "connect", Qt::QueuedConnection, Q_ARG(const QString, ip));
+		return;
+	}
+
 	this->_sock = new QTcpSocket(this);
 	QObject::connect(_sock, &QTcpSocket::connected, this, &PushbotConnection::_sock_connected);
 	QObject::connect(_sock, &QTcpSocket::disconnected, this, &PushbotConnection::_sock_disconnected);
 	QObject::connect(_sock, &QTcpSocket::stateChanged, this, &PushbotConnection::_sock_onStateChanged);
 	QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::_sock_readyRead);
-	this->_sock->connectToHost("10.162.177.42", 56000);
+	this->_sock->connectToHost(ip, 56000);
 }
 
 
@@ -91,6 +97,8 @@ sendCommand(const commands::Command *cmd)
 	_sock << *cmd;
 
 	// TODO: shall we delete the command afterwards?
+	// TODO: use a smartpointer instead?
+	delete cmd;
 }
 
 

@@ -11,6 +11,22 @@ class NavigationWidget : public QWidget
 public:
 	NavigationWidget(QWidget *parent = 0);
 	virtual ~NavigationWidget();
+
+	void resizeEvent(QResizeEvent *ev) override;
+	void mouseMoveEvent(QMouseEvent *ev) override;
+	void paintEvent(QPaintEvent *ev) override;
+
+signals:
+	void navigationUpdate(const QPointF pos);
+
+private:
+	int _cmd_radius;
+	float _radius;
+	QPoint _center;
+	QPointF _cmd_pos;
+	QPoint _cmd_visual_pos;
+
+	void cmdToVisualPos();
 };
 
 } // nst::
