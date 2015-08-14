@@ -20,6 +20,10 @@ int
 show_dialog(int argc, char *argv[])
 {
 	using namespace nst;
+
+	// register the command infrastructure. required!!
+	qRegisterMetaType<const commands::Command*>("const commands::Command*");
+
 	QApplication app(argc, argv);
 
 	// create a stupid dialog

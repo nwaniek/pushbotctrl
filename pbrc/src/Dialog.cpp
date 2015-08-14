@@ -8,6 +8,7 @@
 #include "BytestreamParser.hpp"
 #include "PushbotConnection.hpp"
 #include "DVSEventWidget.hpp"
+#include "Commands.hpp"
 
 namespace nst {
 
@@ -54,6 +55,8 @@ btnCreateClicked() {
 
 	// connect the two worker objects
 	connect(_con, &PushbotConnection::dataReady, _parser, &BytestreamParser::parseData, Qt::QueuedConnection);
+	connect(_con, &PushbotConnection::connected, this, &Dialog::pushbotConnected, Qt::QueuedConnection);
+	connect(_con, &PushbotConnection::disconnected, this, &Dialog::pushbotDisconnected, Qt::QueuedConnection);
 
 	// connect the parser back to the Dialog
 	connect(_parser, &BytestreamParser::eventReceived, this, &Dialog::onDVSEventReceived);
@@ -80,4 +83,26 @@ onResponseReceived(const QString *str)
 }
 
 
+void Dialog::
+pushbotConnected()
+{
+	std::cout << "connected" << std::endl;
+
+	_con->sendCommand(new commands::DVS(true));
+	_con->sendCommand(new commands::MotorDriver(true));
+	_con->sendCommand(new commands::MVD0(40));
+	_con->sendCommand(new commands::MVD1(-40));
 }
+
+
+void Dialog::
+pushbotDisconnected()
+{
+	std::cout << "disconnected" << std::endl;
+}
+
+
+
+
+
+} // nst::

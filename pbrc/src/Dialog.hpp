@@ -25,8 +25,12 @@ public:
 
 private slots:
 	void btnCreateClicked();
+
 	void onDVSEventReceived(const DVSEvent *ev);
 	void onResponseReceived(const QString *str);
+
+	void pushbotConnected();
+	void pushbotDisconnected();
 
 private:
 	QPushButton *_buttonCreate;

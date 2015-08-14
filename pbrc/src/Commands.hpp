@@ -15,6 +15,7 @@ namespace commands {
  */
 struct Command
 {
+	virtual ~Command() {}
 	virtual const std::string toString() const = 0;
 };
 
@@ -26,7 +27,7 @@ struct MotorDriver : Command
 {
 	MotorDriver(bool enabled = true) : _enabled(enabled) {}
 
-	const std::string toString() const
+	const std::string toString() const override
 	{
 		if (this->_enabled)
 			return std::string("!M+\n");
@@ -49,7 +50,7 @@ struct DVS : Command
 {
 	DVS(bool enabled = true) : _enabled(enabled) {}
 
-	const std::string toString() const
+	const std::string toString() const override
 	{
 		if (this->_enabled)
 			return std::string("E+\n");
@@ -97,7 +98,7 @@ private:
 	{ \
 		M ## TYPE ## ID(unsigned width) : md_base_t(width) {} \
 		\
-		const std::string toString() const \
+		const std::string toString() const override \
 		{ \
 			std::stringstream ss; \
 			ss << "!" << (CMD) << std::to_string(_id) << "=" << std::to_string(_width) << "\n"; \
