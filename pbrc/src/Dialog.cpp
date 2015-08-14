@@ -7,22 +7,29 @@
 #include "Datatypes.hpp"
 #include "BytestreamParser.hpp"
 #include "PushbotConnection.hpp"
+#include "DVSEventWidget.hpp"
 
 namespace nst {
 
 Dialog::
 Dialog(QWidget *parent) : QDialog(parent)
 {
-	buttonCreate = new QPushButton("Create Threads");
-	buttonConnect = new QPushButton("Connect");
-	buttonDisconnect = new QPushButton("Disconnect");
+	// create widgets
+	_buttonCreate = new QPushButton("Create Threads");
+	_buttonConnect = new QPushButton("Connect");
+	_buttonDisconnect = new QPushButton("Disconnect");
+	_dvswidget = new DVSEventWidget(this);
 
-	connect(buttonCreate, &QPushButton::clicked, this, &Dialog::btnCreateClicked);
+	// connect signals + slots
+	connect(_buttonCreate, &QPushButton::clicked, this, &Dialog::btnCreateClicked);
 
+	// layout
 	QGridLayout *layout = new QGridLayout;
-	layout->addWidget(buttonCreate, 0, 0);
-	layout->addWidget(buttonConnect, 1, 0);
-	layout->addWidget(buttonDisconnect, 2, 0);
+	layout->addWidget(_dvswidget, 0, 0);
+	layout->addWidget(_buttonCreate, 1, 0);
+	layout->addWidget(_buttonConnect, 2, 0);
+	layout->addWidget(_buttonDisconnect, 3, 0);
+	layout->setSizeConstraint(QLayout::SetDefaultConstraint);
 	setLayout(layout);
 }
 
@@ -37,8 +44,8 @@ btnCreateClicked() {
 	_con->moveToThread(_con_thread);
 
 	// connect the connection foo here
-	connect(buttonConnect, &QPushButton::clicked, _con, &PushbotConnection::connect, Qt::QueuedConnection);
-	connect(buttonDisconnect, &QPushButton::clicked, _con, &PushbotConnection::disconnect, Qt::QueuedConnection);
+	connect(_buttonConnect, &QPushButton::clicked, _con, &PushbotConnection::connect, Qt::QueuedConnection);
+	connect(_buttonDisconnect, &QPushButton::clicked, _con, &PushbotConnection::disconnect, Qt::QueuedConnection);
 
 	// create the parser thread
 	_parser_thread = new QThread();
@@ -60,6 +67,7 @@ btnCreateClicked() {
 void Dialog::
 onDVSEventReceived(const DVSEvent *ev)
 {
+	_dvswidget->newEvent(ev);
 	delete ev;
 }
 

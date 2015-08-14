@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+namespace nst {
+
 /**
  * struct DVSEvent - A single DVS event.
  *
@@ -19,11 +21,14 @@ struct DVSEvent {
 	} timeformat_t;
 };
 
+
+}
+
 /**
  * ostream conversion of an event to a textual representation
  */
 inline
-std::ostream& operator<<(std::ostream &out, DVSEvent &e) {
+std::ostream& operator<<(std::ostream &out, nst::DVSEvent &e) {
 	out << "(" << e.x << "," << e.y << "," << (e.p > 0 ? 1 : 0) << "," << e.t << ")";
 	return out;
 }

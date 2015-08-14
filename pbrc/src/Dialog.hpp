@@ -2,18 +2,19 @@
 #define __DIALOG_HPP__F6563F73_2A6D_435D_B63D_EDCEA5D13311
 
 #include <QDialog>
-#include "Datatypes.hpp"
+// #include "Datatypes.hpp"
 
 class QPushButton;
 class QString;
 class QThread;
 
-
 namespace nst {
 
 
+struct DVSEvent;
 class PushbotConnection;
 class BytestreamParser;
+class DVSEventWidget;
 
 
 class Dialog : public QDialog
@@ -28,9 +29,10 @@ private slots:
 	void onResponseReceived(const QString *str);
 
 private:
-	QPushButton *buttonCreate;
-	QPushButton *buttonConnect;
-	QPushButton *buttonDisconnect;
+	QPushButton *_buttonCreate;
+	QPushButton *_buttonConnect;
+	QPushButton *_buttonDisconnect;
+	DVSEventWidget *_dvswidget;
 
 	QThread *_con_thread;
 	PushbotConnection *_con;
