@@ -5,6 +5,7 @@
 #include "BytestreamParser.hpp"
 #include "PushbotConnection.hpp"
 #include "Dialog.hpp"
+#include "Commands.hpp"
 
 #include <QRect>
 #include <QApplication>
@@ -12,6 +13,7 @@
 #include <QObject>
 #include <QThread>
 #include <QTimer>
+#include <QTcpSocket>
 
 
 int
@@ -27,6 +29,7 @@ show_dialog(int argc, char *argv[])
 
 	return app.exec();
 }
+
 
 int
 main (int argc, char *argv[])

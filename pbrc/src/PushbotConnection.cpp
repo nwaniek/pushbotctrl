@@ -1,4 +1,5 @@
 #include "PushbotConnection.hpp"
+#include "Commands.hpp"
 #include <QMutexLocker>
 #include <iostream>
 
@@ -56,9 +57,12 @@ void PushbotConnection::
 connected()
 {
 	std::cout << "PushbotConnecton: connected" << std::endl;
-	_sock->write("!M+\n");
-	_sock->write("!MD0=40\n");
-	_sock->write("E+\n");
+
+	_sock << commands::DVS(true)
+	      << commands::MotorDriver(true)
+	      << commands::MVD0(40)
+	      << commands::MVD1(40)
+	      ;
 }
 
 void PushbotConnection::

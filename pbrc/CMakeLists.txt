@@ -20,6 +20,7 @@ set(SRC
 
 set(HEADERS
 	src/Datatypes.hpp
+	src/Commands.hpp
 	src/BytestreamParser.hpp
 	src/PushbotConnection.hpp
 	src/Dialog.hpp
