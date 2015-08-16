@@ -14,11 +14,12 @@ namespace nst {
 
 
 struct DVSEvent;
+struct SensorsEvent;
 class PushbotConnection;
 class BytestreamParser;
 class DVSEventWidget;
 class NavigationWidget;
-
+class SensorsProcessor;
 
 class Dialog : public QDialog
 {
@@ -46,6 +47,7 @@ private:
 	QPushButton *_buttonDisconnect;
 	DVSEventWidget *_dvswidget;
 	NavigationWidget *_navwidget;
+	SensorsProcessor *_sensors;
 
 	QThread *_con_thread;
 	PushbotConnection *_con;

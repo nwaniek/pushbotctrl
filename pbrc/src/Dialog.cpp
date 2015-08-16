@@ -3,6 +3,8 @@
 #include <QGridLayout>
 #include <QThread>
 #include <QLineEdit>
+#include <QRegularExpression>
+#include <QDebug>
 #include <iostream>
 #include <cmath>
 #include <ctime>
@@ -13,6 +15,7 @@
 #include "DVSEventWidget.hpp"
 #include "NavigationWidget.hpp"
 #include "Commands.hpp"
+#include "SensorsProcessor.hpp"
 
 namespace nst {
 
@@ -20,11 +23,12 @@ Dialog::
 Dialog(QWidget *parent) : QDialog(parent)
 {
 	// create widgets
-	_edtIP = new QLineEdit("10.162.177.42", this);
+	_edtIP = new QLineEdit("10.162.177.XX", this);
 	_buttonConnect = new QPushButton("Connect", this);
 	_buttonDisconnect = new QPushButton("Disconnect", this);
 	_dvswidget = new DVSEventWidget(this);
 	_navwidget = new NavigationWidget(this);
+	_sensors = new SensorsProcessor(this);
 
 	// connect signals + slots
 	connect(_navwidget, &NavigationWidget::navigationUpdate, this, &Dialog::onNavigationUpdate);
@@ -119,7 +123,13 @@ void Dialog::
 onResponseReceived(const QString *str)
 {
 	// TODO: parse the response into corresponding structs
-	std::cout << str->toStdString() << std::endl;
+	SensorsEvent *se = new SensorsEvent();
+	// extract the content of the robot stream for each sensor
+        QStringList rawResponse = str->split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
+	rawResponse.removeAt(0);
+	//qDebug()<<rawResponse;
+	_sensors->newSample(se);
+	delete se;
 	delete str;
 }
 
@@ -136,6 +146,8 @@ pushbotConnected()
 	// reset motor velocities to 0
 	_con->sendCommand(new commands::MV0(0));
 	_con->sendCommand(new commands::MV1(0));
+	// enable sensory data stream for gyro, acc, mag
+	_con->sendCommand(new commands::IMU(true));
 }
 
 

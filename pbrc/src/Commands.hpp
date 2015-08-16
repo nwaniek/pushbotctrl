@@ -66,6 +66,28 @@ private:
 };
 
 /**
+ * IMU - Enable or disable imu data streaming from on-board sensors
+ */
+struct IMU : Command
+{
+	IMU(bool enabled = true) : _enabled(enabled) {}
+
+	const std::string toString() const override
+	{
+		if(this->_enabled)
+			// enable streaming for 3D gyro, acc, mag (bitmask 7168) @ max freq
+			return std::string("!S+7168,1\n");
+		else
+			return std::string("!S-\n");
+	}
+	void enable()  {this->_enabled = true; }
+	void disable() {this->_enabled = false; }
+
+private:
+	bool _enabled = true;
+};
+
+/**
  * mdw_base_t - Base class for all motor duty width / velocity commands
  *
  * TODO: check if the widths are really correct for DW

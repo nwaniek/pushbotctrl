@@ -16,6 +16,7 @@ set(SRC
 	src/Dialog.cpp
 	src/DVSEventWidget.cpp
 	src/NavigationWidget.cpp
+	src/SensorsProcessor.cpp
 )
 
 set(HEADERS
