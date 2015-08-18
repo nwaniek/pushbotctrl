@@ -30,7 +30,7 @@ signals:
 	void disconnected();
 
 public slots:
-	void connect(const QString ip);
+	void connect(const QString ip, uint16_t port = 56000);
 	void disconnect();
 	void sendCommand(const commands::Command *cmd);
 

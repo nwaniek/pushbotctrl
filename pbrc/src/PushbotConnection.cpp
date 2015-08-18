@@ -20,7 +20,7 @@ PushbotConnection::
 
 
 void PushbotConnection::
-connect(const QString ip)
+connect(const QString ip, uint16_t port)
 {
 	// make sure to call in the correct thread
 	if (thread() != QThread::currentThread()) {
@@ -28,12 +28,14 @@ connect(const QString ip)
 		return;
 	}
 
+	std::cout << "PushbotConnection: attempting connect" << std::endl;
+
 	this->_sock = new QTcpSocket(this);
 	QObject::connect(_sock, &QTcpSocket::connected, this, &PushbotConnection::_sock_connected);
 	QObject::connect(_sock, &QTcpSocket::disconnected, this, &PushbotConnection::_sock_disconnected);
 	QObject::connect(_sock, &QTcpSocket::stateChanged, this, &PushbotConnection::_sock_onStateChanged);
 	QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::_sock_readyRead);
-	this->_sock->connectToHost(ip, 56000);
+	this->_sock->connectToHost(ip, port);
 }
 
 

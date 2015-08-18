@@ -17,9 +17,12 @@ struct DVSEvent;
 struct SensorsEvent;
 class PushbotConnection;
 class BytestreamParser;
+class SensorsProcessor;
+
+namespace gui {
+
 class DVSEventWidget;
 class NavigationWidget;
-class SensorsProcessor;
 
 class Dialog : public QDialog
 {
@@ -58,7 +61,7 @@ private:
 	bool _is_connected = false;
 };
 
-}
+}} // nst::gui::
 
 #endif /* __DIALOG_HPP__F6563F73_2A6D_435D_B63D_EDCEA5D13311 */
 

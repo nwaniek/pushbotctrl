@@ -9,6 +9,12 @@ BytestreamParser:: BytestreamParser(DVSEvent::timeformat_t fmt)
 {
 }
 
+BytestreamParser::
+~BytestreamParser()
+{
+	std::cout << "~BytestreamParser" << std::endl;
+}
+
 void BytestreamParser::
 parse(const unsigned char c)
 {

@@ -1,3 +1,6 @@
+#ifndef __SENSORSPROCESSOR_HPP__50486FA1_C215_4455_A737_ADAFD76CA620
+#define __SENSORSPROCESSOR_HPP__50486FA1_C215_4455_A737_ADAFD76CA620
+
 #include <QObject>
 #include <cmath>
 #include <iostream>
@@ -31,3 +34,6 @@ private:
 
 
 } // nst::
+
+#endif /* __SENSORSPROCESSOR_HPP__50486FA1_C215_4455_A737_ADAFD76CA620 */
+

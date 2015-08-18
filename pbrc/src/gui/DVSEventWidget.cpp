@@ -3,7 +3,7 @@
 #include <QPainter>
 #include "Datatypes.hpp"
 
-namespace nst {
+namespace nst { namespace gui {
 
 
 DVSEventWidget::
@@ -77,4 +77,4 @@ newEvent(const DVSEvent *ev)
 }
 
 
-} // nst::
+}} // nst::gui::

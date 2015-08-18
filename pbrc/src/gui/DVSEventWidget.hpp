@@ -12,6 +12,8 @@ namespace nst {
 struct DVSEvent;
 
 
+namespace gui {
+
 /**
  * DVSEventWidget - draw events received from a DVS.
  */
@@ -38,7 +40,7 @@ private:
 };
 
 
-} // nst::
+}} // nst::gui::
 
 #endif /* __DVSEVENTWIDGET_HPP__B36E956F_AC52_4740_9A93_3C82F0E75D71 */
 

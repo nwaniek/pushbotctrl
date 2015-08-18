@@ -20,7 +20,7 @@ class BytestreamParser : public QObject
 
 public:
 	BytestreamParser(DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
-	virtual ~BytestreamParser() {}
+	virtual ~BytestreamParser();
 	void set_timeformat(DVSEvent::timeformat_t fmt);
 
 public slots:

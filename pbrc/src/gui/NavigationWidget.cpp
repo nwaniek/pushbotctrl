@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <iostream>
 
-namespace nst {
+namespace nst { namespace gui {
 
 
 NavigationWidget::
@@ -104,4 +104,4 @@ paintEvent(QPaintEvent * /*ev*/)
 
 
 
-} // nst::
+}} // nst::gui::

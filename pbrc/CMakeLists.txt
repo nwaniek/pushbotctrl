@@ -13,10 +13,13 @@ set(SRC
 	src/main.cpp
 	src/BytestreamParser.cpp
 	src/PushbotConnection.cpp
-	src/Dialog.cpp
-	src/DVSEventWidget.cpp
-	src/NavigationWidget.cpp
 	src/SensorsProcessor.cpp
+	src/RobotControl.cpp
+	src/gui/Dialog.cpp
+	src/gui/DVSEventWidget.cpp
+	src/gui/NavigationWidget.cpp
+	src/gui/MainWindow.cpp
+	src/gui/RobotControlWidget.cpp
 )
 
 set(HEADERS
@@ -24,11 +27,16 @@ set(HEADERS
 	src/Commands.hpp
 	src/BytestreamParser.hpp
 	src/PushbotConnection.hpp
-	src/Dialog.hpp
-	src/DVSEventWidget.hpp
-	src/NavigationWidget.hpp
+	src/SensorsProcessor.hpp
+	src/RobotControl.hpp
+	src/gui/Dialog.hpp
+	src/gui/DVSEventWidget.hpp
+	src/gui/NavigationWidget.hpp
+	src/gui/MainWindow.hpp
+	src/gui/RobotControlWidget.hpp
 )
 
+include_directories(src)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 

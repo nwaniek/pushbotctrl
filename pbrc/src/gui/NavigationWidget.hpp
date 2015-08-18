@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-namespace nst {
+namespace nst { namespace gui {
 
 class NavigationWidget : public QWidget
 {
@@ -29,7 +29,7 @@ private:
 	void cmdToVisualPos();
 };
 
-} // nst::
+}} // nst::gui::
 
 #endif /* __NAVIGATIONWIDGET_HPP__58B99C95_EEFF_48D6_84A4_457243568660 */
 

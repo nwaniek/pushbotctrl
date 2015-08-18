@@ -12,12 +12,12 @@
 #include "Datatypes.hpp"
 #include "BytestreamParser.hpp"
 #include "PushbotConnection.hpp"
-#include "DVSEventWidget.hpp"
-#include "NavigationWidget.hpp"
 #include "Commands.hpp"
 #include "SensorsProcessor.hpp"
+#include "gui/DVSEventWidget.hpp"
+#include "gui/NavigationWidget.hpp"
 
-namespace nst {
+namespace nst { namespace gui {
 
 Dialog::
 Dialog(QWidget *parent) : QDialog(parent)
@@ -176,4 +176,4 @@ onDisconnectClicked()
 	_con->disconnect();
 }
 
-} // nst::
+}} // nst::gui::
