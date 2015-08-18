@@ -163,7 +163,25 @@ MAKE_MOTOR_COMMAND(VD,  1, "MVD")
 // finalize
 #undef MAKE_MOTOR_COMMAND
 
+
+/*
+ * Empty - The empty command is represented by a simple newline.
+ *
+ * The Empty command is useful when connecting to the robot. The internal state
+ * of the robot may be such that it does not properly accept commands. Sending a
+ * newline will terminate the PushBots parsing engine for whatever it currently
+ * reads from the input.
+ */
+struct Empty : Command
+{
+	const std::string toString() const override
+	{
+		return "\n";
+	}
+};
+
 }} // nst::commands
+
 
 
 inline

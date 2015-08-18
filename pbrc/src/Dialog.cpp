@@ -58,8 +58,8 @@ onNavigationUpdate(const QPointF pos)
 	// compute speeds
 	float max_speed = 100;
 	float norm = sqrt(pos.x() * pos.x() + pos.y() * pos.y());
-	float m0speed = - max_speed * norm * sgnf(pos.y());
-	float m1speed = - max_speed * norm * sgnf(pos.y());
+	float m0speed = max_speed * norm * sgnf(pos.y());
+	float m1speed = max_speed * norm * sgnf(pos.y());
 
 	// compute angle
 	float angle = atan2(pos.y(), pos.x());
@@ -69,9 +69,9 @@ onNavigationUpdate(const QPointF pos)
 	float m1mul = 1.0f;
 
 	if (aangle < M_PI / 2.0)
-		m0mul = aangle / (M_PI / 2.0);
+		m1mul = aangle / (M_PI / 2.0);
 	else
-		m1mul = (M_PI - aangle) / (M_PI / 2.0);
+		m0mul = (M_PI - aangle) / (M_PI / 2.0);
 
 	m0speed *= m0mul;
 	m1speed *= m1mul;
@@ -139,6 +139,10 @@ pushbotConnected()
 {
 	std::cout << "connected to PushBot" << std::endl;
 	_is_connected = true;
+
+	// always send an empty command first. This will push the PushBot's
+	// state machine to a state that new commands
+	_con->sendCommand(new commands::Empty);
 
 	// enable event streaming and motor control
 	_con->sendCommand(new commands::DVS(true));
