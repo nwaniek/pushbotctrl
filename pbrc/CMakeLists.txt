@@ -16,6 +16,7 @@ set(SRC
 	src/PushbotConnection.cpp
 	src/SensorsProcessor.cpp
 	src/RobotControl.cpp
+	src/UserFunction.cpp
 	src/gui/Dialog.cpp
 	src/gui/DVSEventWidget.cpp
 	src/gui/NavigationWidget.cpp
@@ -32,6 +33,7 @@ set(HEADERS
 	src/PushbotConnection.hpp
 	src/SensorsProcessor.hpp
 	src/RobotControl.hpp
+	src/UserFunction.hpp
 	src/gui/Dialog.hpp
 	src/gui/DVSEventWidget.hpp
 	src/gui/NavigationWidget.hpp

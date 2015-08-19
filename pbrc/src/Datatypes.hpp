@@ -1,6 +1,8 @@
 #ifndef __PBRCTYPES_HPP__FA25AD5E_D235_4C44_88AE_DCAF7423C619
 #define __PBRCTYPES_HPP__FA25AD5E_D235_4C44_88AE_DCAF7423C619
 
+#include <ostream>
+#include <cstdlib>
 #include <cstdint>
 
 namespace nst {
@@ -63,6 +65,16 @@ struct RPYEvent {
 		   }
 	~RPYEvent(){ free(roll); free(pitch); free(yaw); }
 };
+
+
+/**
+ * A user function
+ */
+typedef struct {
+	const char *name;
+	void (*fn)();
+} UserFunction;
+
 
 }
 
