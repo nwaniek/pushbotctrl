@@ -39,6 +39,18 @@ connect(const QString ip, uint16_t port)
 	this->_sock->connectToHost(ip, port);
 }
 
+void PushbotConnection::
+flush()
+{
+	// make sure to call in the correct thread
+	if (thread() != QThread::currentThread()) {
+		QMetaObject::invokeMethod(this, "flush", Qt::QueuedConnection);
+		return;
+	}
+	if (!_sock) return;
+	_sock->flush();
+}
+
 
 void PushbotConnection::
 disconnect()
@@ -53,6 +65,7 @@ disconnect()
 		std::cout << "PushbotConnection: No socket" << std::endl;
 		return;
 	}
+
 	_sock->disconnectFromHost();
 	delete this->_sock;
 	this->_sock = nullptr;

@@ -166,6 +166,9 @@ connectRobot(const QString IP, uint16_t port)
 void RobotControl::
 disconnectRobot()
 {
+	_con->sendCommand(new commands::MV0(0));
+	_con->sendCommand(new commands::MV1(0));
+	_con->flush();
 	_con->disconnect();
 }
 
