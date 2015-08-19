@@ -1,4 +1,4 @@
-#include "gui/RobotControlWidget.hpp"
+#include "gui/RobotControlWindow.hpp"
 
 #include <iostream>
 
@@ -17,14 +17,14 @@
 namespace nst { namespace gui {
 
 
-RobotControlWidget::
-RobotControlWidget(QWidget *parent, Qt::WindowFlags flags)
+RobotControlWindow::
+RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags)
 {
 	// create control and hook into signals
 	_control = new RobotControl();
-	connect(_control, &RobotControl::connected, this, &RobotControlWidget::onControlConnected);
-	connect(_control, &RobotControl::disconnected, this, &RobotControlWidget::onControlDisconnected);
+	connect(_control, &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
+	connect(_control, &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
 
 
 	// create GUI
@@ -41,12 +41,12 @@ RobotControlWidget(QWidget *parent, Qt::WindowFlags flags)
 
 	_btnConnect = new QPushButton("connect", _centralWidget);
 	layout->addWidget(_btnConnect, 0, 2);
-	connect(_btnConnect, &QPushButton::clicked, this, &RobotControlWidget::onBtnConnectClicked);
+	connect(_btnConnect, &QPushButton::clicked, this, &RobotControlWindow::onBtnConnectClicked);
 
 	// navigation widget
 	_wdgtNav = new NavigationWidget(_centralWidget);
 	layout->addWidget(_wdgtNav, 1, 0, 1, 3);
-	connect(_wdgtNav, &NavigationWidget::navigationUpdate, this, &RobotControlWidget::onNavigationUpdate);
+	connect(_wdgtNav, &NavigationWidget::navigationUpdate, this, &RobotControlWindow::onNavigationUpdate);
 
 	// options
 	_cbShowEvents = new QCheckBox("visualize DVS events", _centralWidget);
@@ -59,8 +59,8 @@ RobotControlWidget(QWidget *parent, Qt::WindowFlags flags)
 }
 
 
-RobotControlWidget::
-~RobotControlWidget()
+RobotControlWindow::
+~RobotControlWindow()
 {
 	// TODO: segfault here! wait for all threads to finish
 	delete _control;
@@ -70,7 +70,7 @@ RobotControlWidget::
 }
 
 
-void RobotControlWidget::
+void RobotControlWindow::
 closeEvent(QCloseEvent *ev)
 {
 	emit closing(this);
@@ -78,7 +78,7 @@ closeEvent(QCloseEvent *ev)
 }
 
 
-void RobotControlWidget::
+void RobotControlWindow::
 onBtnConnectClicked()
 {
 	if (!_control->isConnected())
@@ -88,7 +88,7 @@ onBtnConnectClicked()
 }
 
 
-void RobotControlWidget::
+void RobotControlWindow::
 onControlConnected()
 {
 	_btnConnect->setText("disconnect");
@@ -96,7 +96,7 @@ onControlConnected()
 }
 
 
-void RobotControlWidget::
+void RobotControlWindow::
 onControlDisconnected()
 {
 	_btnConnect->setText("connect");
@@ -105,7 +105,7 @@ onControlDisconnected()
 
 #define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
 
-void RobotControlWidget::
+void RobotControlWindow::
 onNavigationUpdate(const QPointF pos)
 {
 	if (!_control->isConnected()) return;

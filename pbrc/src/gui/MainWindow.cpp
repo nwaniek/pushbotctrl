@@ -7,7 +7,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 
-#include "gui/RobotControlWidget.hpp"
+#include "gui/RobotControlWindow.hpp"
 
 namespace nst { namespace gui {
 
@@ -22,10 +22,10 @@ MainWindow(QWidget *parent)
 	setCentralWidget(_mdi);
 
 	// fill with some stuff
-	auto rc = new RobotControlWidget(_mdi);
+	auto rc = new RobotControlWindow(_mdi);
 	rc->resize(250, 250);
 	rc->setWindowTitle("Robot Control");
-	connect(rc, &RobotControlWidget::closing, this, &MainWindow::onSubwindowClosing);
+	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
 	_wins.push_back(rc);
 
 	statusBar();

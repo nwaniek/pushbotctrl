@@ -19,14 +19,14 @@ namespace gui {
 class NavigationWidget;
 
 /**
- * RobotControlWidget - Widget to connect to and control a robot.
+ * RobotControlWindow - Widget to connect to and control a robot.
  */
-class RobotControlWidget : public QMdiSubWindow
+class RobotControlWindow : public QMdiSubWindow
 {
 	Q_OBJECT
 public:
-	RobotControlWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
-	~RobotControlWidget();
+	RobotControlWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	~RobotControlWindow();
 
 	void closeEvent(QCloseEvent *ev) Q_DECL_OVERRIDE;
 
