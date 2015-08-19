@@ -25,7 +25,7 @@ RobotControl()
 
 	_parser = new BytestreamParser(_id);
 	_parser->moveToThread(_parser_thread);
-	
+
 	_sensors = new SensorsProcessor(this);
 
 	// connect the worker objects
@@ -108,6 +108,8 @@ onPushbotDisconnected()
 void RobotControl::
 onDVSEventReceived(const DVSEvent *ev)
 {
+	// call the user function
+	if (_userfn) _userfn->fn(this, ev);
 	emit DVSEventReceived(ev);
 }
 
@@ -182,8 +184,8 @@ drive(float x, float y)
 	// compute speeds
 	float max_speed = 100;
 	float norm = sqrt(x*x + y*y);
-	float m0speed = max_speed * norm * sgnf(y);
-	float m1speed = max_speed * norm * sgnf(y);
+	float m0speed = max_speed * norm * SGNF(y);
+	float m1speed = max_speed * norm * SGNF(y);
 
 	// compute angle
 	float angle = atan2(y, x);
@@ -225,6 +227,20 @@ uint8_t RobotControl::
 id() const
 {
 	return _id;
+}
+
+
+void RobotControl::
+setUserFunction(const UserFunction *fn)
+{
+	_userfn = fn;
+}
+
+
+void RobotControl::
+unsetUserFunction()
+{
+	_userfn = nullptr;
 }
 
 } // nst::

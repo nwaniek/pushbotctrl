@@ -10,6 +10,8 @@
 
 namespace nst {
 
+class RobotControl;
+
 /**
  * struct DVSEvent - A single DVS event.
  *
@@ -73,10 +75,10 @@ struct RPYEvent {
 /**
  * A user function
  */
-typedef struct {
+struct UserFunction {
 	const char *name;
-	void (*fn)();
-} UserFunction;
+	void (*fn)(const RobotControl *control, const DVSEvent *ev);
+};
 
 
 }

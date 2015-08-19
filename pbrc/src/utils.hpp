@@ -6,9 +6,14 @@
 #include <deque>
 
 /**
+ * get the length of an array
+ */
+#define LENGTH(X) (sizeof X / sizeof X[0])
+
+/**
  * sign of a float, either -1 or 1 (0 will return 1 here)
  */
-#define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
+#define SGNF(a) (((a) < 0.0) ? -1.0 : 1.0)
 
 
 /**

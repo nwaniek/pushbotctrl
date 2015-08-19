@@ -13,6 +13,8 @@ namespace nst {
 class PushbotConnection;
 class SensorsProcessor;
 class BytestreamParser;
+
+struct UserFunction;
 struct DVSEvent;
 
 namespace commands {
@@ -32,6 +34,8 @@ namespace commands {
  *
  * Essentially it is a wrapper around all sub-classes, but exposes one interface
  * to 'the outside world' and hiding the internals.
+ *
+ * TODO: make the userfunction interface thread safe
  */
 class RobotControl : public QObject
 {
@@ -44,6 +48,13 @@ public:
 	void connectRobot(const QString IP, uint16_t port = 56000);
 	void disconnectRobot();
 	bool isConnected();
+
+	/*
+	 * set a user function which will be called everytime an event is
+	 * received.
+	 */
+	void setUserFunction(const UserFunction *fn);
+	void unsetUserFunction();
 
 	/*
 	 * drive the robot, allowed are commands to live within [-1,1] for each
@@ -81,6 +92,8 @@ private:
 	SensorsProcessor *_sensors;
 	PushbotConnection *_con;
 	BytestreamParser *_parser;
+
+	const UserFunction *_userfn = nullptr;
 
 	bool _is_connected = false;
 

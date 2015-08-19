@@ -12,8 +12,10 @@
 #include <QMdiArea>
 #include <QMoveEvent>
 
+#include "utils.hpp"
 #include "RobotControl.hpp"
 #include "Commands.hpp"
+#include "UserFunction.hpp"
 #include "gui/NavigationWidget.hpp"
 #include "gui/EventVisualizerWindow.hpp"
 
@@ -24,6 +26,9 @@ RobotControlWindow::
 RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags)
 {
+	// TODO: just a check here
+	std::cout << LENGTH(user_functions) << " user functions found" << std::endl;
+
 	// create control and hook into signals
 	_control = std::make_shared<RobotControl>();
 	connect(_control.get(), &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
@@ -140,6 +145,11 @@ onControlConnected()
 	}
 	if (_cbShowEvents->checkState() == Qt::Checked)
 		openEventVisualizerWindow();
+
+
+	// TODO: make GUI component to change user function. just set the 0 user
+	// function here for demo purposes
+	_control->setUserFunction(&user_functions[0]);
 }
 
 
@@ -199,6 +209,7 @@ moveEvent(QMoveEvent *ev)
 	}
 	ev->accept();
 }
+
 
 
 }} // nst::gui

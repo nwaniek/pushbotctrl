@@ -2,14 +2,22 @@
 #define __USERFUNCTION_HPP__9CBC23DF_9FA8_4117_9F7A_371081D2E31E
 
 #include "Datatypes.hpp"
+
+using namespace std;
 using namespace nst;
 
 
 /*
- * Declarations of your functions go here
+ * Declarations of your functions go here. they all have to accept the same
+ * arguments:
+ *	RobotControl *control
+ *	DVSEvent *ev
+ * control is a pointer to the control interface for the robot from which
+ * the event is coming, and ev a pointer to the event structure.
  */
-void demo_function_1();
-void demo_function_2();
+
+void demo_function_1(const RobotControl *control, const DVSEvent *ev);
+void demo_function_2(const RobotControl *control, const DVSEvent *ev);
 
 
 /*
