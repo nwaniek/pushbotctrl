@@ -78,6 +78,7 @@ private:
 	QThread *_con_thread;
 	QThread *_parser_thread;
 
+	SensorsProcessor *_sensors;
 	PushbotConnection *_con;
 	BytestreamParser *_parser;
 

@@ -7,7 +7,7 @@
 #include "utils.hpp"
 
 #include <iostream>
-
+#include <QRegularExpression>
 
 namespace nst {
 
@@ -25,6 +25,8 @@ RobotControl()
 
 	_parser = new BytestreamParser(_id);
 	_parser->moveToThread(_parser_thread);
+	
+	_sensors = new SensorsProcessor(this);
 
 	// connect the worker objects
 	connect(_con, &PushbotConnection::dataReady, _parser, &BytestreamParser::parseData, Qt::QueuedConnection);
@@ -53,6 +55,7 @@ RobotControl::
 	// shut down objects
 	_con->disconnect();
 
+	delete _sensors;
 	// shut down threads
 	_parser_thread->quit();
 	_con_thread->quit();
@@ -112,9 +115,36 @@ onDVSEventReceived(const DVSEvent *ev)
 void RobotControl::
 onResponseReceived(const QString *str)
 {
-	// TODO: Sensor parsing stuff goes here... ? maybe it should go
-	// somewhere else (like in the parser thread, connected by
-	// signals/slots)
+	// parse the response into corresponding structs
+        // one response per sensor
+        short axisIdx = 0;
+        SensorsEvent *se = new SensorsEvent;
+        // check which sensor we have (S10 - gyro, S11 - acc, S12 - mag)
+        short seIdx = str->contains("-S10", Qt::CaseInsensitive)?0:(str->contains("-S11", Qt::CaseInsensitive)?1:2);
+        // extract the content of the robot stream
+        QStringList rawData = str->split(QRegularExpression("-S1\\d\\s"), QString::SkipEmptyParts);
+        foreach(const QString &sensorEntry, rawData){
+                QStringList axesVals = sensorEntry.split(" ");
+                axisIdx = 0;
+                foreach(const QString axisEntry, axesVals){
+                        switch(seIdx){
+                                case 0:
+                                        se->g[axisIdx]= decodeSensorVal(axisEntry);
+                                        break;
+                                case 1:
+                                        se->a[axisIdx]= decodeSensorVal(axisEntry);
+                                        break;
+                                case 2:
+                                        se->m[axisIdx]= decodeSensorVal(axisEntry);
+                                        break;
+                        }
+                       if((axisIdx++)==2) break;
+                }
+        }
+        // ... and send the packed struct to update RPY
+         _sensors->newSample(se);
+        delete se;
+        delete str;
 
 	emit responseReceived(str);
 }

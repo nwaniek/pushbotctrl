@@ -9,6 +9,7 @@
 namespace nst {
 
 #define IN_WEIGHT 0.5
+#define TO_DEG(X) (double)X*180.0/M_PI
 
 // forward declarations
 struct SensorsEvent;

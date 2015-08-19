@@ -75,8 +75,8 @@ struct IMU : Command
 	const std::string toString() const override
 	{
 		if(this->_enabled)
-			// enable streaming for 3D gyro, acc, mag (bitmask 7168) @ max freq
-			return std::string("!S+7168,1\n");
+			// enable streaming for 3D gyro, acc, mag (bitmask 7168) @ 125Hz
+			return std::string("!S+7168,8\n");
 		else
 			return std::string("!S-\n");
 	}

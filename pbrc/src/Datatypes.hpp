@@ -4,6 +4,9 @@
 #include <ostream>
 #include <cstdlib>
 #include <cstdint>
+#include <bitset>
+#include <QString>
+
 
 namespace nst {
 
@@ -29,23 +32,23 @@ struct DVSEvent {
  *
  */
 struct SensorsEvent {
-	int16_t *a; // acc  (g)
-	int16_t *g; // gyro (deg/s)
-	int16_t *m; // mag  (uT)
+	double *a; // acc  (g)
+	double *g; // gyro (deg/s)
+	double *m; // mag  (uT)
 	typedef enum{
-		ACCELEROMETER,
 		GYROSCOPE,
+		ACCELEROMETER,
 		MAGNETOMETER,
 	} sensortype_t;
 	typedef enum{
-		XAXIS,
 		YAXIS,
 		ZAXIS,
+		XAXIS,
 	} sensoraxis_t;
 	SensorsEvent(){
-			a = (int16_t*)calloc(3, sizeof(int16_t));
-			g = (int16_t*)calloc(3, sizeof(int16_t));
-			m = (int16_t*)calloc(3, sizeof(int16_t));
+			a = (double*)calloc(3, sizeof(double));
+			g = (double*)calloc(3, sizeof(double));
+			m = (double*)calloc(3, sizeof(double));
 		       }
 	~SensorsEvent() { free(a); free(g); free(m);}
 };
@@ -88,6 +91,17 @@ std::ostream& operator<<(std::ostream &out, nst::DVSEvent &e)
 	return out;
 }
 
+/**
+ * decode incoming sensory values from IMU (encoding is Q16)
+ */
+inline
+double decodeSensorVal(QString str)
+{
+    // get the 32 bit binary representation of the decoded decimal in the Q16 string
+    std::bitset<32> bStr(str.toUInt(NULL, 16));
+    // extract the correct signed value from 2's complement representation
+    return  ((bStr.test(31))?(((double)(bStr.flip(31).to_ulong()) - pow(2, 31))/pow(2,16)):((double)(bStr.to_ulong())/pow(2,16)));
+}
 
 
 
