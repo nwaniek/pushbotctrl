@@ -37,8 +37,8 @@ private:
 	const uint8_t _id;
 	DVSEvent::timeformat_t _timeformat;
 	int _state;
-	QString *_response;
-	DVSEvent *_ev;
+	QString *_response = nullptr;
+	DVSEvent *_ev = nullptr;
 };
 
 } // nst::

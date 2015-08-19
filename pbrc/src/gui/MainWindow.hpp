@@ -25,12 +25,12 @@ public slots:
 	void onSubwindowClosing(QMdiSubWindow *win);
 
 private:
-	QMdiArea *_mdi;
+	QMdiArea *_mdi = nullptr;
 	std::vector<QMdiSubWindow*> _wins;
 
-	QMenu *_mnuFile;
-	QAction *_actAddRobotControl;
-	QAction *_actClose;
+	QMenu *_mnuFile = nullptr;
+	QAction *_actAddRobotControl = nullptr;
+	QAction *_actClose = nullptr;
 };
 
 

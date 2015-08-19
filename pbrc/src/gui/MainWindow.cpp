@@ -8,6 +8,7 @@
 #include <QMdiSubWindow>
 #include <QApplication>
 
+#include "utils.hpp"
 #include "gui/RobotControlWindow.hpp"
 #include "gui/EventVisualizerWindow.hpp"
 

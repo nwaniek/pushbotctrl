@@ -1,3 +1,4 @@
+#include "utils.hpp"
 #include "DVSEventWidget.hpp"
 #include <QRect>
 #include <QPainter>
@@ -9,12 +10,12 @@ namespace nst { namespace gui {
 DVSEventWidget::
 DVSEventWidget(QWidget *parent) : QWidget(parent)
 {
+	_image = new QImage(128, 128, QImage::Format_RGB32);
+	_decay_factor = 0.80;
+
 	connect(&_timer, &QTimer::timeout, this, &DVSEventWidget::decayImage);
 	_timer.setInterval(20);
 	_timer.start();
-
-	_image = new QImage(128, 128, QImage::Format_RGB32);
-	_decay_factor = 0.80;
 }
 
 

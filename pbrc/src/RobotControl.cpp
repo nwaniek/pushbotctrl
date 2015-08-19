@@ -26,7 +26,7 @@ RobotControl()
 	_parser = new BytestreamParser(_id);
 	_parser->moveToThread(_parser_thread);
 
-	_sensors = new SensorsProcessor(this);
+	_sensors = new SensorsProcessor();
 
 	// connect the worker objects
 	connect(_con, &PushbotConnection::dataReady, _parser, &BytestreamParser::parseData, Qt::QueuedConnection);
@@ -56,6 +56,7 @@ RobotControl::
 	_con->disconnect();
 
 	delete _sensors;
+
 	// shut down threads
 	_parser_thread->quit();
 	_con_thread->quit();
@@ -92,6 +93,8 @@ onPushbotConnected()
 	// enable sensory data stream for gyro, acc, mag
 	_con->sendCommand(new commands::IMU(true));
 
+	std::cout << "done sending init sequence" << std::endl;
+
 	emit connected();
 }
 
@@ -117,6 +120,8 @@ onDVSEventReceived(const DVSEvent *ev)
 void RobotControl::
 onResponseReceived(const QString *str)
 {
+	if (!str) return;
+
 	// parse the response into corresponding structs
         // one response per sensor
         short axisIdx = 0;

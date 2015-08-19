@@ -8,6 +8,7 @@
 #include <QColor>
 #include <algorithm>
 #include <iostream>
+#include "utils.hpp"
 
 namespace nst { namespace gui {
 
@@ -20,7 +21,7 @@ NavigationWidget(QWidget *parent)
 , _center(0, 0)
 , _cmd_pos(0, 0)
 , _cmd_visual_pos(0, 0)
-{ }
+{}
 
 
 NavigationWidget::

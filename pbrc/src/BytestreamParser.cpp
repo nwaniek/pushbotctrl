@@ -1,12 +1,15 @@
 #include "BytestreamParser.hpp"
 #include <iostream>
 #include <cstdlib>
+#include "utils.hpp"
 
 namespace nst {
 
 BytestreamParser:: BytestreamParser(uint8_t id, DVSEvent::timeformat_t fmt)
-: QObject(), _id(id), _timeformat(fmt), _state(0), _response(nullptr), _ev(nullptr)
-{}
+: QObject(), _id(id), _timeformat(fmt), _state(0), _response(new QString()), _ev(nullptr)
+{
+	_response->reserve(64);
+}
 
 BytestreamParser::
 ~BytestreamParser()
@@ -31,17 +34,22 @@ parse(const unsigned char c)
 	// high bit. If it is set, it is an event
 	case 0:
 		if ((c & 0x80) == 0) {
+			_response->append(c);
 			if (c == '\n') {
+
+				if (!_response) std::cout << "PANIC RESPONSE" << std::endl;
 				emit responseReceived(std::move(_response));
-				_response = nullptr;
+
+				_response = new QString();
+				_response->reserve(64);
 			}
 			else {
-				if (!_response) {
+				// if (!_response) {
 					// create a new string and reserve some
 					// space to speed up appending of items
-					_response = new QString();
-					_response->reserve(64);
-				}
+				// 	_response = new QString();
+				// 	_response->reserve(64);
+				// }
 				_response->append(c);
 			}
 		}

@@ -86,12 +86,12 @@ private slots:
 	void onResponseReceived(const QString *str);
 
 private:
-	QThread *_con_thread;
-	QThread *_parser_thread;
+	QThread *_con_thread = nullptr;
+	QThread *_parser_thread = nullptr;
 
-	SensorsProcessor *_sensors;
-	PushbotConnection *_con;
-	BytestreamParser *_parser;
+	SensorsProcessor *_sensors = nullptr;
+	PushbotConnection *_con = nullptr;
+	BytestreamParser *_parser = nullptr;
 
 	const UserFunction *_userfn = nullptr;
 

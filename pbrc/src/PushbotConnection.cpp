@@ -2,6 +2,7 @@
 #include "Commands.hpp"
 #include <QMutexLocker>
 #include <iostream>
+#include "utils.hpp"
 
 namespace nst {
 
@@ -69,21 +70,21 @@ _sock_readyRead()
 void PushbotConnection::
 _sock_connected()
 {
-	// std::cout << "PushbotConnecton: connected" << std::endl;
+	std::cout << "PushbotConnecton: connected" << std::endl;
 	emit connected();
 }
 
 void PushbotConnection::
 _sock_disconnected()
 {
-	// std::cout << "PushbotConnecton: disconnected" << std::endl;
+	std::cout << "PushbotConnecton: disconnected" << std::endl;
 	emit disconnected();
 }
 
 void PushbotConnection::
-_sock_onStateChanged(QAbstractSocket::SocketState /*state*/)
+_sock_onStateChanged(QAbstractSocket::SocketState state)
 {
-	// std::cout << "state changed: " << state << std::endl;
+	std::cout << "state changed: " << state << std::endl;
 }
 
 

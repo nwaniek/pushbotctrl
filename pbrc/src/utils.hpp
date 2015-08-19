@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <deque>
+#include <iostream>
 
 /**
  * get the length of an array
@@ -14,6 +15,11 @@
  * sign of a float, either -1 or 1 (0 will return 1 here)
  */
 #define SGNF(a) (((a) < 0.0) ? -1.0 : 1.0)
+
+/**
+ * debug utility
+ */
+#define PRINTFN std::cout << __FILE__ << " " << __LINE__ << ": " << __func__ << std::endl;
 
 
 /**

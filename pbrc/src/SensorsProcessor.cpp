@@ -1,13 +1,14 @@
 #include "SensorsProcessor.hpp"
+#include "utils.hpp"
 
 
 namespace nst{
 
 SensorsProcessor::
-SensorsProcessor(QObject *parent) 
-: QObject(parent) 
+SensorsProcessor(QObject *parent)
+: QObject(parent)
 {
-	_rpyEstimate = new RPYEvent; 
+	_rpyEstimate = new RPYEvent;
 	fa = (double*)calloc(3, sizeof(double));
 	fm = (double*)calloc(3, sizeof(double));
 }
@@ -21,7 +22,7 @@ SensorsProcessor::
 	free(fm);
 }
 
-void 
+void
 SensorsProcessor::
 newSample(const SensorsEvent *se)
 {
@@ -44,7 +45,7 @@ newSample(const SensorsEvent *se)
 	_rpyEstimate->pitch[SensorsEvent::ACCELEROMETER]  = TO_DEG(atan2(sqrt(fa[SensorsEvent::XAXIS]*fa[SensorsEvent::XAXIS] + fa[SensorsEvent::ZAXIS]*fa[SensorsEvent::ZAXIS]),fa[SensorsEvent::YAXIS])) - 90.0;
 	_rpyEstimate->roll[SensorsEvent::ACCELEROMETER] = TO_DEG(atan2(sqrt(fa[SensorsEvent::YAXIS]*fa[SensorsEvent::YAXIS] + fa[SensorsEvent::ZAXIS]*fa[SensorsEvent::ZAXIS]),fa[SensorsEvent::XAXIS])) - 90.0;
 	_rpyEstimate->yaw[SensorsEvent::ACCELEROMETER]   = 0.0f; // for yaw motion we are perpedicular to the gravity vector, so no contribution
-	
+
 	// magneto data (raw data in uT)
 	// LPF
 	fm[SensorsEvent::XAXIS] = se->m[SensorsEvent::XAXIS]*IN_WEIGHT + fm[SensorsEvent::XAXIS]*(1.0f - IN_WEIGHT);

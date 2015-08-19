@@ -8,6 +8,7 @@
 #include <QResizeEvent>
 #include <QCloseEvent>
 
+#include "utils.hpp"
 #include "Datatypes.hpp"
 #include "RobotControl.hpp"
 #include "gui/DVSEventWidget.hpp"
