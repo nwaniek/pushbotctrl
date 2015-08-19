@@ -9,9 +9,17 @@ using namespace nst;
 void
 demo_function_1(const RobotControl *control, const DVSEvent *ev)
 {
-	cout << "demo function 1: robot " << control->id() << " event at (" << ev->x << ", " << ev->y << endl;
+	static int i = 0;
+	++i;
+	if (i == 1000) {
+		cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
+		i = 0;
+	}
+
 
 	// TODO: example to make the robot move
+	// voting system to drive left/right --> Braitenberg Vehicle
+
 }
 
 

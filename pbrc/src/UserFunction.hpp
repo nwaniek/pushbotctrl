@@ -14,6 +14,8 @@ using namespace nst;
  *	DVSEvent *ev
  * control is a pointer to the control interface for the robot from which
  * the event is coming, and ev a pointer to the event structure.
+ *
+ * Do _NOT_ call delete on control or event!
  */
 
 void demo_function_1(const RobotControl *control, const DVSEvent *ev);

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <bitset>
+#include <memory>
 #include <QString>
 
 
