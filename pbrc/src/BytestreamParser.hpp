@@ -22,6 +22,7 @@ public:
 	BytestreamParser(const uint8_t id, DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
 	virtual ~BytestreamParser();
 	void set_timeformat(DVSEvent::timeformat_t fmt);
+	uint8_t id() const;
 
 public slots:
 	void parseData(const QByteArray &data);

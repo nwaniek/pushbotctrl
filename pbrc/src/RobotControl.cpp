@@ -9,15 +9,6 @@
 #include <iostream>
 
 
-/*
- * ID generation stuff
- */
-
-
-
-/*
- *
- */
 namespace nst {
 
 RobotControl::
@@ -66,7 +57,7 @@ RobotControl::
 	_parser_thread->quit();
 	_con_thread->quit();
 
-	return_robot_id(_id);
+	release_robot_id(_id);
 }
 
 

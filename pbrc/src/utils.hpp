@@ -20,7 +20,7 @@ T clamp(const T& n, const T& lower, const T& upper) {
 }
 
 /**
- * insert a value into a vector such that the vector is sorted afterwards
+ * insert a value into a deque such that the deque is sorted afterwards
  */
 template <typename T>
 typename std::deque<T>::iterator insert_sorted(std::deque<T> &v, T const& t) {
@@ -28,8 +28,7 @@ typename std::deque<T>::iterator insert_sorted(std::deque<T> &v, T const& t) {
 }
 
 
-void prepare_robot_ids();
-void return_robot_id(uint8_t id);
+void release_robot_id(uint8_t id);
 uint8_t get_robot_id();
 
 #endif /* __UTILS_HPP__B69DECA2_4EA9_41CC_9E83_A9BBBB6E06C6 */

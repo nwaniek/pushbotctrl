@@ -13,7 +13,7 @@ main (int argc, char *argv[])
 	// use the base class here.
 	qRegisterMetaType<const commands::Command*>("const commands::Command*");
 
-	prepare_robot_ids();
+	// prepare_robot_ids();
 	QApplication app(argc, argv);
 	gui::MainWindow win;
 	win.show();

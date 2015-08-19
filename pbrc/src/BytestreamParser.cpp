@@ -14,6 +14,14 @@ BytestreamParser::
 	std::cout << "~BytestreamParser" << std::endl;
 }
 
+
+uint8_t BytestreamParser::
+id() const
+{
+	return _id;
+}
+
+
 void BytestreamParser::
 parse(const unsigned char c)
 {

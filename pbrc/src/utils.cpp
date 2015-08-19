@@ -1,20 +1,20 @@
 #include "utils.hpp"
 #include <deque>
 
-static std::deque<uint8_t> ids;
 
-void
+// compiler will fill in the IDs at compile time this way
+static std::deque<uint8_t> ids(256);
+static void
 prepare_robot_ids()
 {
-	// TODO: HAVE FUN! MAKE THIS A COMPILE TIME TEMPLATE :D
 	for (uint8_t i = 0; i < 255; i++)
-		ids.push_back(i);
-	ids.push_back(255);
+		ids[i] = i;
+	ids[255] = 255;
 }
-
+int _q = (prepare_robot_ids(), 0);
 
 void
-return_robot_id(uint8_t id)
+release_robot_id(uint8_t id)
 {
 	insert_sorted(ids, id);
 }
