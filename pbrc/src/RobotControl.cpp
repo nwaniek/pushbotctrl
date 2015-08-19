@@ -133,4 +133,67 @@ isConnected()
 	return this->_is_connected;
 }
 
+
+/*
+ * some helper functions and macros
+ */
+#define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
+
+template <typename T>
+T clamp(const T& n, const T& lower, const T& upper)
+{
+	return std::max(lower, std::min(n, upper));
+}
+
+
+void RobotControl::
+drive(float x, float y)
+{
+	if (!_is_connected) return;
+
+	// make sure x,y are in [-1, 1]
+	x = clamp(x, -1.0f, 1.0f);
+	y = clamp(y, -1.0f, 1.0f);
+
+	// compute speeds
+	float max_speed = 100;
+	float norm = sqrt(x*x + y*y);
+	float m0speed = max_speed * norm * sgnf(y);
+	float m1speed = max_speed * norm * sgnf(y);
+
+	// compute angle
+	float angle = atan2(y, x);
+	float aangle = fabsf(angle);
+
+	float m0mul = 1.0f;
+	float m1mul = 1.0f;
+
+	if (aangle < M_PI / 2.0)
+		m1mul = aangle / (M_PI / 2.0);
+	else
+		m0mul = (M_PI - aangle) / (M_PI / 2.0);
+
+	m0speed *= m0mul;
+	m1speed *= m1mul;
+
+	// finally send commands
+	_con->sendCommand(new commands::MV0(static_cast<int>(floor(m0speed))));
+	_con->sendCommand(new commands::MV1(static_cast<int>(floor(m1speed))));
+}
+
+
+void RobotControl::
+enableEventstream()
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::DVS(true));
+}
+
+void RobotControl::
+disableEventstream()
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::DVS(false));
+}
+
 } // nst::

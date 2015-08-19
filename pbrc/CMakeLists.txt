@@ -19,7 +19,8 @@ set(SRC
 	src/gui/DVSEventWidget.cpp
 	src/gui/NavigationWidget.cpp
 	src/gui/MainWindow.cpp
-	src/gui/RobotControlWidget.cpp
+	src/gui/RobotControlWindow.cpp
+	src/gui/EventVisualizerWindow.cpp
 )
 
 set(HEADERS
@@ -33,7 +34,8 @@ set(HEADERS
 	src/gui/DVSEventWidget.hpp
 	src/gui/NavigationWidget.hpp
 	src/gui/MainWindow.hpp
-	src/gui/RobotControlWidget.hpp
+	src/gui/RobotControlWindow.hpp
+	src/gui/EventVisualizerWindow.hpp
 )
 
 include_directories(src)

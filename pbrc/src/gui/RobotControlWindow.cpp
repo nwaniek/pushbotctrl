@@ -9,10 +9,12 @@
 #include <QFrame>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QMdiArea>
 
 #include "RobotControl.hpp"
 #include "Commands.hpp"
 #include "gui/NavigationWidget.hpp"
+#include "gui/EventVisualizerWindow.hpp"
 
 namespace nst { namespace gui {
 
@@ -22,10 +24,9 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags)
 {
 	// create control and hook into signals
-	_control = new RobotControl();
-	connect(_control, &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
-	connect(_control, &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
-
+	_control = std::make_shared<RobotControl>();
+	connect(_control.get(), &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
+	connect(_control.get(), &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
 
 	// create GUI
 	_centralWidget = new QFrame(this);
@@ -36,7 +37,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	layout->addWidget(new QLabel("IP: ", _centralWidget));
 
 	// connectivity
-	_edtIP = new QLineEdit("10.162.177.xxx", _centralWidget);
+	_edtIP = new QLineEdit("10.162.242.234", _centralWidget);
 	layout->addWidget(_edtIP, 0, 1);
 
 	_btnConnect = new QPushButton("connect", _centralWidget);
@@ -51,6 +52,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	// options
 	_cbShowEvents = new QCheckBox("visualize DVS events", _centralWidget);
 	_cbShowEvents->setCheckState(Qt::Checked);
+	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onShowEventsStateChanged);
 	layout->addWidget(_cbShowEvents, 2, 0, 1, 3);
 
 	_centralWidget->setLayout(layout);
@@ -62,11 +64,15 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 RobotControlWindow::
 ~RobotControlWindow()
 {
-	// TODO: segfault here! wait for all threads to finish
-	delete _control;
+	// close all related windows. do not delete, they have the DeleteOnClose
+	// flag set so will tidy up themselves
+	if (_winEventVisualizer) {
+		_winEventVisualizer->close();
+		_winEventVisualizer = nullptr;
+	}
 
-	// TODO: delete all other objects!
-	std::cout << "destroying" << std::endl;
+	// debug output
+	std::cout << "~RobotControlWindow" << std::endl;
 }
 
 
@@ -89,53 +95,84 @@ onBtnConnectClicked()
 
 
 void RobotControlWindow::
+openEventVisualizerWindow()
+{
+	// create event visualizer and move relative to control window
+	const QRect geom = frameGeometry();
+
+	_winEventVisualizer = new EventVisualizerWindow(_control, mdiArea());
+	_winEventVisualizer->resize(250, 250);
+	_winEventVisualizer->show();
+	_winEventVisualizer->move(geom.topRight().x(), geom.topRight().y());
+	_winEventVisualizer->setWindowTitle("Events: " + _edtIP->text());
+
+	connect(_winEventVisualizer, &EventVisualizerWindow::closing, this, &RobotControlWindow::onEventVisualizerClosing);
+}
+
+
+void RobotControlWindow::
+closeEventVisualizerWindow()
+{
+	if (_winEventVisualizer) _winEventVisualizer->close();
+	_winEventVisualizer = nullptr;
+}
+
+
+void RobotControlWindow::
 onControlConnected()
 {
 	_btnConnect->setText("disconnect");
+	_edtIP->setReadOnly(true);
 	std::cout << "control connected" << std::endl;
+
+	// set up an event visualizer
+	// TODO: check the checkbox if we really need to
+	if (_winEventVisualizer) {
+		std::cout << "RobotControlWindow: something went wrong, _winEventVisualizer not nullptr" << std::endl;
+		_winEventVisualizer->close();
+	}
+	if (_cbShowEvents->checkState() == Qt::Checked)
+		openEventVisualizerWindow();
 }
 
 
 void RobotControlWindow::
 onControlDisconnected()
 {
+	closeEventVisualizerWindow();
+	_edtIP->setReadOnly(false);
 	_btnConnect->setText("connect");
 	std::cout << "control disconnected" << std::endl;
 }
 
-#define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
 
 void RobotControlWindow::
 onNavigationUpdate(const QPointF pos)
 {
 	if (!_control->isConnected()) return;
-	// translate position from ([-1,1], [-1,1]) to a motor command
-
-	// compute speeds
-	float max_speed = 100;
-	float norm = sqrt(pos.x() * pos.x() + pos.y() * pos.y());
-	float m0speed = max_speed * norm * sgnf(pos.y());
-	float m1speed = max_speed * norm * sgnf(pos.y());
-
-	// compute angle
-	float angle = atan2(pos.y(), pos.x());
-	float aangle = fabsf(angle);
-
-	float m0mul = 1.0f;
-	float m1mul = 1.0f;
-
-	if (aangle < M_PI / 2.0)
-		m1mul = aangle / (M_PI / 2.0);
-	else
-		m0mul = (M_PI - aangle) / (M_PI / 2.0);
-
-	m0speed *= m0mul;
-	m1speed *= m1mul;
-
-	_control->sendCommand(new commands::MV0(static_cast<int>(m0speed)));
-	_control->sendCommand(new commands::MV1(static_cast<int>(m1speed)));
+	_control->drive(pos.x(), pos.y());
 }
 
+
+void RobotControlWindow::
+onShowEventsStateChanged(int state)
+{
+	if (!_control->isConnected()) return;
+
+	if (state == Qt::Checked)
+		openEventVisualizerWindow();
+	else
+		closeEventVisualizerWindow();
+}
+
+
+void RobotControlWindow::
+onEventVisualizerClosing()
+{
+	// remove the pointer to the window to make sure that we do not
+	// accidentally access it -> segfault
+	_winEventVisualizer = nullptr;
+}
 
 
 }} // nst::gui

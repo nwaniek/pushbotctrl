@@ -45,6 +45,18 @@ public:
 	void disconnectRobot();
 	bool isConnected();
 
+	/*
+	 * drive the robot, allowed are commands to live within [-1,1] for each
+	 * motor
+	 */
+	void drive(const float x, const float y);
+
+	/*
+	 * enable/disable event streaming
+	 */
+	void enableEventstream();
+	void disableEventstream();
+
 	// TODO: change this!!
 	void sendCommand(const commands::Command *cmd);
 

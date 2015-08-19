@@ -8,6 +8,7 @@
 #include <QMdiSubWindow>
 
 #include "gui/RobotControlWindow.hpp"
+#include "gui/EventVisualizerWindow.hpp"
 
 namespace nst { namespace gui {
 
@@ -27,6 +28,13 @@ MainWindow(QWidget *parent)
 	rc->setWindowTitle("Robot Control");
 	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
 	_wins.push_back(rc);
+
+	// create a visualizer window for now -> this will be managed from the
+	// main robotcontrol window in the future!
+	// auto evis = new EventVisualizerWindow(_mdi);
+	// evis->resize(250,250);
+	// evis->move(250, 0);
+	// _wins.push_back(evis);
 
 	statusBar();
 }
