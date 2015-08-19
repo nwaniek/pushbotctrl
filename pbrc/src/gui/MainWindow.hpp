@@ -6,6 +6,8 @@
 
 class QMdiArea;
 class QMdiSubWindow;
+class QAction;
+class QMenu;
 
 namespace nst { namespace gui {
 
@@ -17,12 +19,18 @@ public:
 	MainWindow(QWidget *parent = 0);
 	virtual ~MainWindow();
 
+
 public slots:
+	void addRobotControl();
 	void onSubwindowClosing(QMdiSubWindow *win);
 
 private:
 	QMdiArea *_mdi;
 	std::vector<QMdiSubWindow*> _wins;
+
+	QMenu *_mnuFile;
+	QAction *_actAddRobotControl;
+	QAction *_actClose;
 };
 
 

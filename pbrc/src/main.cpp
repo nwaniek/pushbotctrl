@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "gui/MainWindow.hpp"
 #include "Commands.hpp"
+#include "utils.hpp"
 
 int
 main (int argc, char *argv[])
@@ -12,6 +13,7 @@ main (int argc, char *argv[])
 	// use the base class here.
 	qRegisterMetaType<const commands::Command*>("const commands::Command*");
 
+	prepare_robot_ids();
 	QApplication app(argc, argv);
 	gui::MainWindow win;
 	win.show();

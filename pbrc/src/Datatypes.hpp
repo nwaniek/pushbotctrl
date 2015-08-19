@@ -10,6 +10,7 @@ namespace nst {
  *
  */
 struct DVSEvent {
+	uint8_t id;
 	uint64_t t;
 	uint16_t x, y;
 	uint8_t  p;

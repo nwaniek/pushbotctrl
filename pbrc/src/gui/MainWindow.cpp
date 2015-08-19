@@ -6,6 +6,7 @@
 #include <QStatusBar>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <QApplication>
 
 #include "gui/RobotControlWindow.hpp"
 #include "gui/EventVisualizerWindow.hpp"
@@ -17,24 +18,21 @@ MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
 	// initialize UI
-	menuBar()->addMenu("File");
+	_mnuFile = menuBar()->addMenu("File");
+
+	// build menu
+	_actAddRobotControl = _mnuFile->addAction("Add Robot Control");
+	_mnuFile->addSeparator();
+	_actClose = _mnuFile->addAction("Close");
+
+	// connect signals to slots
+	connect(_actAddRobotControl, &QAction::triggered, this, &MainWindow::addRobotControl);
+	connect(_actClose, &QAction::triggered, this, &QApplication::quit);
 
 	_mdi = new QMdiArea(this);
 	setCentralWidget(_mdi);
-
-	// fill with some stuff
-	auto rc = new RobotControlWindow(_mdi);
-	rc->resize(250, 250);
-	rc->setWindowTitle("Robot Control");
-	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
-	_wins.push_back(rc);
-
-	// create a visualizer window for now -> this will be managed from the
-	// main robotcontrol window in the future!
-	// auto evis = new EventVisualizerWindow(_mdi);
-	// evis->resize(250,250);
-	// evis->move(250, 0);
-	// _wins.push_back(evis);
+	// always start with at least one robot control window open
+	addRobotControl();
 
 	statusBar();
 }
@@ -43,6 +41,7 @@ MainWindow(QWidget *parent)
 MainWindow::
 ~MainWindow()
 {
+	// TODO: check if this causes a segfault!
 	// we don't access them anymore, so get rid of them
 	for (auto *win: _wins) delete win;
 }
@@ -57,5 +56,14 @@ onSubwindowClosing(QMdiSubWindow *win)
 }
 
 
+void MainWindow::
+addRobotControl()
+{
+	auto rc = new RobotControlWindow(_mdi);
+	rc->resize(250, 250);
+	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
+	_wins.push_back(rc);
+	rc->show();
+}
 
 }} // nst::gui::

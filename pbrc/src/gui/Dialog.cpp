@@ -94,7 +94,7 @@ createThreads() {
 
 	// create the parser thread
 	_parser_thread = new QThread();
-	_parser = new BytestreamParser();
+	_parser = new BytestreamParser(0u);
 	_parser->moveToThread(_parser_thread);
 
 	// connect the two worker objects

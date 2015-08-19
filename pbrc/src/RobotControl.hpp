@@ -57,8 +57,10 @@ public:
 	void enableEventstream();
 	void disableEventstream();
 
-	// TODO: change this!!
+	// TODO: change this!! Do we want to have low level access here?
 	void sendCommand(const commands::Command *cmd);
+
+	uint8_t id() const;
 
 signals:
 	void connected();
@@ -80,10 +82,15 @@ private:
 	BytestreamParser *_parser;
 
 	bool _is_connected = false;
+
+	// each robot control gets its own ID
+	uint8_t _id;
 };
 
 
 } // nst::
+
+
 
 #endif /* __ROBOTCONTROL_HPP__32EABE1A_2F0D_4AAB_B831_EFC05DE84126 */
 

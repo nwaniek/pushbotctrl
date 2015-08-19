@@ -11,6 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SRC
 	src/main.cpp
+	src/utils.cpp
 	src/BytestreamParser.cpp
 	src/PushbotConnection.cpp
 	src/SensorsProcessor.cpp
@@ -24,6 +25,7 @@ set(SRC
 )
 
 set(HEADERS
+	src/utils.hpp
 	src/Datatypes.hpp
 	src/Commands.hpp
 	src/BytestreamParser.hpp

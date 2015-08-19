@@ -19,7 +19,7 @@ class BytestreamParser : public QObject
 	Q_OBJECT
 
 public:
-	BytestreamParser(DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
+	BytestreamParser(const uint8_t id, DVSEvent::timeformat_t fmt = DVSEvent::TIMEFORMAT_0BYTES);
 	virtual ~BytestreamParser();
 	void set_timeformat(DVSEvent::timeformat_t fmt);
 
@@ -33,7 +33,7 @@ signals:
 private:
 	void parse(const unsigned char c);
 
-
+	const uint8_t _id;
 	DVSEvent::timeformat_t _timeformat;
 	int _state;
 	QString *_response;

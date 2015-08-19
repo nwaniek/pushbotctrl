@@ -4,10 +4,9 @@
 
 namespace nst {
 
-BytestreamParser:: BytestreamParser(DVSEvent::timeformat_t fmt)
-: QObject(), _timeformat(fmt), _state(0), _response(nullptr), _ev(nullptr)
-{
-}
+BytestreamParser:: BytestreamParser(uint8_t id, DVSEvent::timeformat_t fmt)
+: QObject(), _id(id), _timeformat(fmt), _state(0), _response(nullptr), _ev(nullptr)
+{}
 
 BytestreamParser::
 ~BytestreamParser()
@@ -40,6 +39,7 @@ parse(const unsigned char c)
 		}
 		else {
 			_ev = new DVSEvent;
+			_ev->id = _id;
 			_ev->x = static_cast<uint16_t>(c) & 0x7F;
 			_ev->y = 0;
 			_ev->p = 0;

@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QMdiArea>
+#include <QMoveEvent>
 
 #include "RobotControl.hpp"
 #include "Commands.hpp"
@@ -37,7 +38,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	layout->addWidget(new QLabel("IP: ", _centralWidget));
 
 	// connectivity
-	_edtIP = new QLineEdit("10.162.242.234", _centralWidget);
+	_edtIP = new QLineEdit("10.162.242.xxx", _centralWidget);
 	layout->addWidget(_edtIP, 0, 1);
 
 	_btnConnect = new QPushButton("connect", _centralWidget);
@@ -55,8 +56,13 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onShowEventsStateChanged);
 	layout->addWidget(_cbShowEvents, 2, 0, 1, 3);
 
-	_centralWidget->setLayout(layout);
+	_cbMagnetWindows = new QCheckBox("magnetic windows", _centralWidget);
+	_cbMagnetWindows->setCheckState(Qt::Checked);
+	layout->addWidget(_cbMagnetWindows, 3, 0, 1, 3);
 
+	this->setWindowTitle("Robot Control " + QString::number(_control->id()));
+
+	_centralWidget->setLayout(layout);
 	setAttribute(Qt::WA_DeleteOnClose);
 }
 
@@ -123,6 +129,7 @@ onControlConnected()
 {
 	_btnConnect->setText("disconnect");
 	_edtIP->setReadOnly(true);
+	_edtIP->setEnabled(false);
 	std::cout << "control connected" << std::endl;
 
 	// set up an event visualizer
@@ -141,6 +148,7 @@ onControlDisconnected()
 {
 	closeEventVisualizerWindow();
 	_edtIP->setReadOnly(false);
+	_edtIP->setEnabled(true);
 	_btnConnect->setText("connect");
 	std::cout << "control disconnected" << std::endl;
 }
@@ -172,6 +180,24 @@ onEventVisualizerClosing()
 	// remove the pointer to the window to make sure that we do not
 	// accidentally access it -> segfault
 	_winEventVisualizer = nullptr;
+}
+
+
+void RobotControlWindow::
+moveEvent(QMoveEvent *ev)
+{
+	// if we have magnet windows, move all 'sub' windows, too
+	if (_cbMagnetWindows->checkState() == Qt::Checked) {
+		int dx = ev->pos().x() - ev->oldPos().x();
+		int dy = ev->pos().y() - ev->oldPos().y();
+
+		if (_winEventVisualizer) {
+			int x = _winEventVisualizer->pos().x();
+			int y = _winEventVisualizer->pos().y();
+			_winEventVisualizer->move(x + dx, y + dy);
+		}
+	}
+	ev->accept();
 }
 
 

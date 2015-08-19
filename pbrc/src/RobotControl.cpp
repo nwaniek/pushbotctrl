@@ -4,14 +4,27 @@
 #include "BytestreamParser.hpp"
 #include "Datatypes.hpp"
 #include "Commands.hpp"
+#include "utils.hpp"
 
 #include <iostream>
 
+
+/*
+ * ID generation stuff
+ */
+
+
+
+/*
+ *
+ */
 namespace nst {
 
 RobotControl::
 RobotControl()
 {
+	_id = get_robot_id();
+
 	// initialize required threads and connections
 	_con_thread = new QThread();
 	_parser_thread = new QThread();
@@ -19,7 +32,7 @@ RobotControl()
 	_con = new PushbotConnection();
 	_con->moveToThread(_con_thread);
 
-	_parser = new BytestreamParser();
+	_parser = new BytestreamParser(_id);
 	_parser->moveToThread(_parser_thread);
 
 	// connect the worker objects
@@ -52,6 +65,8 @@ RobotControl::
 	// shut down threads
 	_parser_thread->quit();
 	_con_thread->quit();
+
+	return_robot_id(_id);
 }
 
 
@@ -134,18 +149,6 @@ isConnected()
 }
 
 
-/*
- * some helper functions and macros
- */
-#define sgnf(a) (((a) < 0.0) ? -1.0 : 1.0)
-
-template <typename T>
-T clamp(const T& n, const T& lower, const T& upper)
-{
-	return std::max(lower, std::min(n, upper));
-}
-
-
 void RobotControl::
 drive(float x, float y)
 {
@@ -194,6 +197,13 @@ disableEventstream()
 {
 	if (!_is_connected) return;
 	_con->sendCommand(new commands::DVS(false));
+}
+
+
+uint8_t RobotControl::
+id() const
+{
+	return _id;
 }
 
 } // nst::

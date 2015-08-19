@@ -8,6 +8,7 @@ class QFrame;
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
+class QMoveEvent;
 
 namespace nst {
 
@@ -30,7 +31,9 @@ public:
 	RobotControlWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~RobotControlWindow();
 
-	void closeEvent(QCloseEvent *ev) Q_DECL_OVERRIDE;
+	void closeEvent(QCloseEvent *ev) override;
+	void moveEvent(QMoveEvent *ev) override;
+
 
 signals:
 	void closing(QMdiSubWindow *win);
@@ -58,7 +61,9 @@ private:
 	QLineEdit *_edtIP = nullptr;
 	QPushButton *_btnConnect = nullptr;
 	NavigationWidget *_wdgtNav = nullptr;
+
 	QCheckBox *_cbShowEvents = nullptr;
+	QCheckBox *_cbMagnetWindows = nullptr;
 
 	// 'sub'-windows
 	EventVisualizerWindow *_winEventVisualizer = nullptr;
