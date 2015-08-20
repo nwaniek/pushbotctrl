@@ -30,15 +30,6 @@ demo_function_1(RobotControl * const control,
 				<< std::endl;
 		}
 	}
-
-	// if (!i) cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
-
-
-	// Do not send commands to the robot too often
-
-	// TODO: example to make the robot move
-	// voting system to drive left/right --> Braitenberg Vehicle
-	// control->drive(0.1, 0.2);
 }
 
 void
@@ -64,4 +55,14 @@ demo_function_2(RobotControl * const control,
 				<< std::endl;
 		}
 	}
+
+	// if (!i) cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
+
+
+	// Do not send commands to the robot too often
+
+	// TODO: example to make the robot move
+	// voting system to drive left/right --> Braitenberg Vehicle
+	if (!sensor_ev && !dvs_ev)
+		control->drive(0.0, 0.2);
 }
