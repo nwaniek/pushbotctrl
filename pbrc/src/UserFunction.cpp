@@ -24,5 +24,5 @@ demo_function_2(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 {
 	static int i = 0;
 	++i %= 5000;
-	if (!i) cout << "demo function 2 called 5000 times: robot " << control->id() << " event at (" << ev->x << ", " << ev->y << endl;
+	if (!i) cout << "demo function 2 called 5000 times: robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
 }
