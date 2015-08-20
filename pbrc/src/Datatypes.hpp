@@ -80,7 +80,7 @@ struct SensorEvent {
 struct UserFunction {
 	const char *name;
 	void (*fn)(RobotControl * const control,
-	           const DVSEvent *dvs_ev,
+	           std::shared_ptr<DVSEvent> dvs_ev,
 		   std::shared_ptr<SensorEvent> sensor_ev);
 };
 

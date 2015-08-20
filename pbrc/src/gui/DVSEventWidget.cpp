@@ -67,7 +67,7 @@ paintEvent(QPaintEvent * /*event*/)
 
 void
 DVSEventWidget::
-newEvent(const DVSEvent *ev)
+newEvent(std::shared_ptr<DVSEvent> ev)
 {
 	constexpr QRgb COLOR_ON = qRgb(0, 0, 255);
 	constexpr QRgb COLOR_OFF = qRgb(255, 0, 0);

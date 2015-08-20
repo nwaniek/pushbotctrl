@@ -13,9 +13,7 @@ BytestreamParser:: BytestreamParser(uint8_t id, DVSEvent::timeformat_t fmt)
 
 BytestreamParser::
 ~BytestreamParser()
-{
-	// std::cout << "~BytestreamParser" << std::endl;
-}
+{ }
 
 
 uint8_t BytestreamParser::

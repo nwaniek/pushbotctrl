@@ -79,7 +79,6 @@ void RobotControl::
 onPushbotConnected()
 {
 	// initiate the robot.
-	std::cout << "connected to PushBot" << std::endl;
 	_is_connected = true;
 
 	// always send an empty command first. This will push the PushBot's
@@ -95,8 +94,6 @@ onPushbotConnected()
 	// enable sensory data stream for gyro, acc, mag
 	_con->sendCommand(new commands::IMU(true));
 
-	std::cout << "done sending init sequence" << std::endl;
-
 	emit connected();
 }
 
@@ -104,22 +101,24 @@ onPushbotConnected()
 void RobotControl::
 onPushbotDisconnected()
 {
-	std::cout << "disconnected from PushBot" << std::endl;
 	_is_connected = false;
 	emit disconnected();
 }
 
 
 void RobotControl::
-onDVSEventReceived(const DVSEvent *ev)
+onDVSEventReceived(DVSEvent *ev)
 {
-	if (_userfn) _userfn->fn(this, ev, std::shared_ptr<SensorEvent>());
-	emit DVSEventReceived(ev);
+	// turn the pointer into a shared memory object. data comes from the
+	// parser and is now in our thread.
+	auto _ev = std::make_shared<DVSEvent>(std::move(*ev));
+	if (_userfn) _userfn->fn(this, _ev, std::shared_ptr<SensorEvent>());
+	emit DVSEventReceived(_ev);
 }
 
 
 void RobotControl::
-onResponseReceived(const QString *str)
+onResponseReceived(QString *str)
 {
 	if (!str) return;
 
@@ -228,7 +227,7 @@ unsetUserFunction()
 void RobotControl::
 onSensorEvent(std::shared_ptr<SensorEvent> ev)
 {
-	if (_userfn) _userfn->fn(this, nullptr, ev);
+	if (_userfn) _userfn->fn(this, std::shared_ptr<DVSEvent>(), ev);
 	emit sensorEvent(ev);
 }
 

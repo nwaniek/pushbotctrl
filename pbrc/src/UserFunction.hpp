@@ -21,7 +21,7 @@ using namespace nst;
 
 void demo_function_1(
 		RobotControl * const control,
-		const DVSEvent *dvs_ev,
+		shared_ptr<DVSEvent> dvs_ev,
 		shared_ptr<SensorEvent> sensor_ev);
 
 //void demo_function_2(RobotControl * const control, const DVSEvent *ev);

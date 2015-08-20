@@ -28,8 +28,8 @@ public slots:
 	void parseData(const QByteArray &data);
 
 signals:
-	void eventReceived(const DVSEvent *ev);
-	void responseReceived(const QString *str);
+	void eventReceived(DVSEvent *ev);
+	void responseReceived(QString *str);
 
 private:
 	void parse(const unsigned char c);

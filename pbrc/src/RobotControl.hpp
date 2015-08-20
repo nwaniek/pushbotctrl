@@ -78,15 +78,18 @@ public:
 signals:
 	void connected();
 	void disconnected();
-	void DVSEventReceived(const DVSEvent *ev);
+
+	// TODO: change to shared_ptr ?
 	void responseReceived(const QString *str);
+
+	void DVSEventReceived(std::shared_ptr<DVSEvent> ev);
 	void sensorEvent(std::shared_ptr<SensorEvent> ev);
 
 private slots:
 	void onPushbotConnected();
 	void onPushbotDisconnected();
-	void onDVSEventReceived(const DVSEvent *ev);
-	void onResponseReceived(const QString *str);
+	void onDVSEventReceived(DVSEvent *ev);
+	void onResponseReceived(QString *str);
 	void onSensorEvent(std::shared_ptr<SensorEvent> ev);
 
 private:

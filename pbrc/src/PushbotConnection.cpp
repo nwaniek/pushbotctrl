@@ -15,9 +15,7 @@ PushbotConnection(QObject *parent)
 
 PushbotConnection::
 ~PushbotConnection()
-{
-	std::cout << "~PushbotConnection" << std::endl;
-}
+{ }
 
 
 void PushbotConnection::
@@ -38,6 +36,8 @@ connect(const QString ip, uint16_t port)
 	QObject::connect(_sock, &QTcpSocket::stateChanged, this, &PushbotConnection::_sock_onStateChanged);
 	QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::_sock_readyRead);
 	this->_sock->connectToHost(ip, port);
+
+	// TODO: wait some time until timeout?
 }
 
 void PushbotConnection::
@@ -60,12 +60,7 @@ disconnect()
 		QMetaObject::invokeMethod(this, "disconnect", Qt::QueuedConnection);
 		return;
 	}
-
-	// std::cout << "Pushbot: disconnect called" << std::endl;
-	if (!_sock) {
-		std::cout << "PushbotConnection: No socket" << std::endl;
-		return;
-	}
+	if (!_sock) return;
 
 	_sock->disconnectFromHost();
 	delete this->_sock;
@@ -84,22 +79,18 @@ _sock_readyRead()
 void PushbotConnection::
 _sock_connected()
 {
-	std::cout << "PushbotConnecton: connected" << std::endl;
 	emit connected();
 }
 
 void PushbotConnection::
 _sock_disconnected()
 {
-	std::cout << "PushbotConnecton: disconnected" << std::endl;
 	emit disconnected();
 }
 
 void PushbotConnection::
-_sock_onStateChanged(QAbstractSocket::SocketState state)
-{
-	std::cout << "state changed: " << state << std::endl;
-}
+_sock_onStateChanged(QAbstractSocket::SocketState /*state*/)
+{ }
 
 
 void PushbotConnection::

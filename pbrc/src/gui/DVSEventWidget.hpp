@@ -1,6 +1,7 @@
 #ifndef __DVSEVENTWIDGET_HPP__B36E956F_AC52_4740_9A93_3C82F0E75D71
 #define __DVSEVENTWIDGET_HPP__B36E956F_AC52_4740_9A93_3C82F0E75D71
 
+#include <memory>
 #include <QTimer>
 #include <QWidget>
 #include <QPaintEvent>
@@ -28,7 +29,7 @@ public:
 public slots:
 	void paintEvent(QPaintEvent *event);
 	void decayImage();
-	void newEvent(const DVSEvent *ev);
+	void newEvent(std::shared_ptr<DVSEvent> ev);
 	void setDecayFactor(float decay_factor);
 
 private:

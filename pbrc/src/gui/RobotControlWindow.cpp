@@ -27,9 +27,6 @@ RobotControlWindow::
 RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags)
 {
-	// TODO: just a check here
-	std::cout << LENGTH(user_functions) << " user functions found" << std::endl;
-
 	// create control and hook into signals
 	_control = new RobotControl();
 	connect(_control, &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
@@ -99,9 +96,6 @@ RobotControlWindow::
 		_winEventVisualizer->close();
 		_winEventVisualizer = nullptr;
 	}
-
-	// debug output
-	std::cout << "~RobotControlWindow" << std::endl;
 }
 
 
@@ -153,12 +147,11 @@ onControlConnected()
 	_btnConnect->setText("disconnect");
 	_edtIP->setReadOnly(true);
 	_edtIP->setEnabled(false);
-	std::cout << "control connected" << std::endl;
 
 	// set up an event visualizer
 	// TODO: check the checkbox if we really need to
 	if (_winEventVisualizer) {
-		std::cout << "RobotControlWindow: something went wrong, _winEventVisualizer not nullptr" << std::endl;
+		std::cerr << "RobotControlWindow: something went wrong, _winEventVisualizer not nullptr" << std::endl;
 		_winEventVisualizer->close();
 	}
 	if (_cbShowEvents->checkState() == Qt::Checked)
@@ -187,7 +180,6 @@ onControlDisconnected()
 	_edtIP->setReadOnly(false);
 	_edtIP->setEnabled(true);
 	_btnConnect->setText("connect");
-	std::cout << "control disconnected" << std::endl;
 }
 
 
