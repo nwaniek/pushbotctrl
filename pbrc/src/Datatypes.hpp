@@ -35,25 +35,21 @@ struct DVSEvent {
  *
  */
 struct SensorsEvent {
-	double *a; // acc  (g)
-	double *g; // gyro (deg/s)
-	double *m; // mag  (uT)
-	typedef enum{
+	double a[3] = {0.0};
+	double g[3] = {0.0};
+	double m[3] = {0.0};
+
+	typedef enum {
 		GYROSCOPE,
 		ACCELEROMETER,
 		MAGNETOMETER,
 	} sensortype_t;
-	typedef enum{
+
+	typedef enum {
 		YAXIS,
 		ZAXIS,
 		XAXIS,
 	} sensoraxis_t;
-	SensorsEvent(){
-			a = (double*)calloc(3, sizeof(double));
-			g = (double*)calloc(3, sizeof(double));
-			m = (double*)calloc(3, sizeof(double));
-		       }
-	~SensorsEvent() { free(a); free(g); free(m);}
 };
 
 /**
@@ -61,15 +57,9 @@ struct SensorsEvent {
  *
  */
 struct RPYEvent {
-	double *roll;  // [roll_a, roll_g, roll_m]
-	double *pitch; // [pitch_a, pitch_g, pitch_m]
-	double *yaw;   // [yaw_a, yaw_g, yaw_m]
-	RPYEvent() {
-			roll  = (double*)calloc(3, sizeof(double));
-			pitch = (double*)calloc(3, sizeof(double));
-			yaw   = (double*)calloc(3, sizeof(double));
-		   }
-	~RPYEvent(){ free(roll); free(pitch); free(yaw); }
+	double roll[3] = {0.0};
+	double pitch[3] = {0.0};
+	double yaw[3] = {0.0};
 };
 
 

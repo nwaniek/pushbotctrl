@@ -9,17 +9,17 @@ SensorsProcessor(QObject *parent)
 : QObject(parent)
 {
 	_rpyEstimate = new RPYEvent;
-	fa = (double*)calloc(3, sizeof(double));
-	fm = (double*)calloc(3, sizeof(double));
+	fa = new double[3]();
+	fm = new double[3]();
 }
 
 
 SensorsProcessor::
 ~SensorsProcessor()
 {
+	delete[] fm;
+	delete[] fa;
         delete _rpyEstimate;
-	free(fa);
-	free(fm);
 }
 
 void
