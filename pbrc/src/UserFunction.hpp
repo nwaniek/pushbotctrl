@@ -19,8 +19,12 @@ using namespace nst;
  * Do _NOT_ call delete on control or event!
  */
 
-void demo_function_1(RobotControl * const control, const DVSEvent *ev);
-void demo_function_2(RobotControl * const control, const DVSEvent *ev);
+void demo_function_1(
+		RobotControl * const control,
+		const DVSEvent *dvs_ev,
+		shared_ptr<SensorEvent> sensor_ev);
+
+//void demo_function_2(RobotControl * const control, const DVSEvent *ev);
 
 
 /*
@@ -29,7 +33,7 @@ void demo_function_2(RobotControl * const control, const DVSEvent *ev);
  */
 static const UserFunction user_functions[] = {
 	{"First demo function",  demo_function_1},
-	{"Second demo function", demo_function_2},
+	// {"Second demo function", demo_function_2},
 };
 
 

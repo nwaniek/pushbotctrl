@@ -4,6 +4,7 @@
 #include <QObject>
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include "Datatypes.hpp"
 
 namespace nst {
@@ -12,7 +13,7 @@ namespace nst {
 #define TO_DEG(X) (double)X*180.0/M_PI
 
 // forward declarations
-struct SensorsEvent;
+struct IMUEvent;
 
 /**
  * SensorProcessor - Use single sensory samples to compute robot RPY.
@@ -25,8 +26,13 @@ public:
          SensorsProcessor(QObject *parent = 0);
         ~SensorsProcessor();
 
-public slots:
-        void newSample(const SensorsEvent *ev);
+	void parseString(const QString *str);
+
+signals:
+	void sensorEvent(std::shared_ptr<SensorEvent> ev);
+
+public:
+        void processSample(const IMUEvent *ev);
 
 private:
 	RPYEvent * _rpyEstimate; // estimates

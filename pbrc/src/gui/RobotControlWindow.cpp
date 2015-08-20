@@ -200,7 +200,7 @@ onNavigationUpdate(const QPointF pos)
 	if (_linear_control_mode)
 		_control->drive(pos.x(), pos.y());
 	else
-		_control->drive(pos.x() * pos.x(), pos.y() * pos.y());
+		_control->drive(SGNF(pos.x()) * pos.x() * pos.x(), SGNF(pos.y()) * pos.y() * pos.y());
 }
 
 

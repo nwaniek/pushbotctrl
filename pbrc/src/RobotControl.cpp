@@ -8,7 +8,6 @@
 #include "RCManager.hpp"
 
 #include <iostream>
-#include <QRegularExpression>
 
 namespace nst {
 
@@ -29,6 +28,7 @@ RobotControl()
 	_parser->moveToThread(_parser_thread);
 
 	_sensors = new SensorsProcessor();
+	connect(_sensors, &SensorsProcessor::sensorEvent, this, &RobotControl::onSensorEvent);
 
 	// connect the worker objects
 	connect(_con, &PushbotConnection::dataReady, _parser, &BytestreamParser::parseData, Qt::QueuedConnection);
@@ -113,8 +113,7 @@ onPushbotDisconnected()
 void RobotControl::
 onDVSEventReceived(const DVSEvent *ev)
 {
-	// call the user function
-	if (_userfn) _userfn->fn(this, ev);
+	if (_userfn) _userfn->fn(this, ev, std::shared_ptr<SensorEvent>());
 	emit DVSEventReceived(ev);
 }
 
@@ -124,37 +123,8 @@ onResponseReceived(const QString *str)
 {
 	if (!str) return;
 
-	// parse the response into corresponding structs
-        // one response per sensor
-        short axisIdx = 0;
-        SensorsEvent *se = new SensorsEvent;
-        // check which sensor we have (S10 - gyro, S11 - acc, S12 - mag)
-        short seIdx = str->contains("-S10", Qt::CaseInsensitive)?0:(str->contains("-S11", Qt::CaseInsensitive)?1:2);
-        // extract the content of the robot stream
-        QStringList rawData = str->split(QRegularExpression("-S1\\d\\s"), QString::SkipEmptyParts);
-        foreach(const QString &sensorEntry, rawData){
-                QStringList axesVals = sensorEntry.split(" ");
-                axisIdx = 0;
-                foreach(const QString axisEntry, axesVals){
-                        switch(seIdx){
-                                case 0:
-                                        se->g[axisIdx]= decodeSensorVal(axisEntry);
-                                        break;
-                                case 1:
-                                        se->a[axisIdx]= decodeSensorVal(axisEntry);
-                                        break;
-                                case 2:
-                                        se->m[axisIdx]= decodeSensorVal(axisEntry);
-                                        break;
-                        }
-                       if((axisIdx++)==2) break;
-                }
-        }
-        // ... and send the packed struct to update RPY
-         _sensors->newSample(se);
+	_sensors->parseString(str);
 	emit responseReceived(str);
-
-        delete se;
         delete str;
 }
 
@@ -215,6 +185,7 @@ drive(float x, float y)
 	// finally send commands. use decaying ones
 	_con->sendCommand(new commands::MVD0(static_cast<int>(floor(m0speed))));
 	_con->sendCommand(new commands::MVD1(static_cast<int>(floor(m1speed))));
+	_con->flush();
 }
 
 
@@ -251,6 +222,14 @@ void RobotControl::
 unsetUserFunction()
 {
 	_userfn = nullptr;
+}
+
+
+void RobotControl::
+onSensorEvent(std::shared_ptr<SensorEvent> ev)
+{
+	if (_userfn) _userfn->fn(this, nullptr, ev);
+	emit sensorEvent(ev);
 }
 
 } // nst::

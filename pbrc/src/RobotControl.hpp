@@ -17,6 +17,7 @@ class BytestreamParser;
 
 struct UserFunction;
 struct DVSEvent;
+struct SensorEvent;
 
 namespace commands {
 	struct Command;
@@ -69,9 +70,9 @@ public:
 	void enableEventstream();
 	void disableEventstream();
 
-	// TODO: change this!! Do we want to have low level access here?
-	void sendCommand(const commands::Command *cmd);
-
+	/**
+	 * return the Robot Control ID
+	 */
 	uint8_t id() const;
 
 signals:
@@ -79,14 +80,19 @@ signals:
 	void disconnected();
 	void DVSEventReceived(const DVSEvent *ev);
 	void responseReceived(const QString *str);
+	void sensorEvent(std::shared_ptr<SensorEvent> ev);
 
 private slots:
 	void onPushbotConnected();
 	void onPushbotDisconnected();
 	void onDVSEventReceived(const DVSEvent *ev);
 	void onResponseReceived(const QString *str);
+	void onSensorEvent(std::shared_ptr<SensorEvent> ev);
 
 private:
+	void sendCommand(const commands::Command *cmd);
+
+
 	QThread *_con_thread = nullptr;
 	QThread *_parser_thread = nullptr;
 

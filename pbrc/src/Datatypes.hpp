@@ -2,6 +2,7 @@
 #define __PBRCTYPES_HPP__FA25AD5E_D235_4C44_88AE_DCAF7423C619
 
 #include <ostream>
+#include <iostream>
 #include <cstdlib>
 #include <cstdint>
 #include <bitset>
@@ -31,10 +32,10 @@ struct DVSEvent {
 };
 
 /**
- * struct SensorsEvent - A single sensors sample.
+ * struct IMUEvent - A single sensors sample.from the IMU
  *
  */
-struct SensorsEvent {
+struct IMUEvent {
 	double a[3] = {0.0};
 	double g[3] = {0.0};
 	double m[3] = {0.0};
@@ -57,9 +58,19 @@ struct SensorsEvent {
  *
  */
 struct RPYEvent {
-	double roll[3] = {0.0};
+	double roll[3]  = {0.0};
 	double pitch[3] = {0.0};
-	double yaw[3] = {0.0};
+	double yaw[3]   = {0.0};
+};
+
+
+/**
+ * struct SensorEvent - event from the sensor processing system. it contains
+ * both the raw data as well as an estimate of the current rpy. namely
+ */
+struct SensorEvent {
+	IMUEvent imu;
+	RPYEvent rpy;
 };
 
 
@@ -68,7 +79,9 @@ struct RPYEvent {
  */
 struct UserFunction {
 	const char *name;
-	void (*fn)(RobotControl * const control, const DVSEvent *ev);
+	void (*fn)(RobotControl * const control,
+	           const DVSEvent *dvs_ev,
+		   std::shared_ptr<SensorEvent> sensor_ev);
 };
 
 
