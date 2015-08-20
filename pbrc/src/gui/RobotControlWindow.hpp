@@ -9,6 +9,7 @@ class QCheckBox;
 class QLineEdit;
 class QPushButton;
 class QMoveEvent;
+class QComboBox;
 
 namespace nst {
 
@@ -42,6 +43,8 @@ private slots:
 	// ui slots
 	void onBtnConnectClicked();
 	void onShowEventsStateChanged(int state);
+	void onCbUserFunctionStateChanged(int state);
+	void onCmbUserFunctionIndexChanged(int index);
 
 	// 'sub'-window notifications
 	void onEventVisualizerClosing();
@@ -54,6 +57,8 @@ private slots:
 private:
 	void openEventVisualizerWindow();
 	void closeEventVisualizerWindow();
+	void setUserFunction(unsigned index);
+	void unsetUserFunction();
 
 	std::shared_ptr<RobotControl> _control;
 
@@ -64,6 +69,9 @@ private:
 
 	QCheckBox *_cbShowEvents = nullptr;
 	QCheckBox *_cbMagnetWindows = nullptr;
+	QCheckBox *_cbUserFunction = nullptr;
+
+	QComboBox *_cmbUserFunction = nullptr;
 
 	// 'sub'-windows
 	EventVisualizerWindow *_winEventVisualizer = nullptr;

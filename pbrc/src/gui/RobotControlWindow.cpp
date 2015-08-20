@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QMdiArea>
 #include <QMoveEvent>
+#include <QComboBox>
 
 #include "utils.hpp"
 #include "RobotControl.hpp"
@@ -55,15 +56,30 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	layout->addWidget(_wdgtNav, 1, 0, 1, 3);
 	connect(_wdgtNav, &NavigationWidget::navigationUpdate, this, &RobotControlWindow::onNavigationUpdate);
 
-	// options
+	// visualize events?
 	_cbShowEvents = new QCheckBox("visualize DVS events", _centralWidget);
 	_cbShowEvents->setCheckState(Qt::Checked);
-	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onShowEventsStateChanged);
 	layout->addWidget(_cbShowEvents, 2, 0, 1, 3);
+	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onShowEventsStateChanged);
 
+	// magnetic windows?
 	_cbMagnetWindows = new QCheckBox("magnetic windows", _centralWidget);
 	_cbMagnetWindows->setCheckState(Qt::Checked);
 	layout->addWidget(_cbMagnetWindows, 3, 0, 1, 3);
+
+	// user function
+	_cbUserFunction = new QCheckBox("", _centralWidget);
+	_cbUserFunction->setCheckState(Qt::Unchecked);
+	layout->addWidget(_cbUserFunction, 4, 0, 1, 1);
+	connect(_cbUserFunction, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbUserFunctionStateChanged);
+
+	_cmbUserFunction = new QComboBox(_centralWidget);
+	for (size_t i = 0; i < LENGTH(user_functions); i++)
+		_cmbUserFunction->addItem(user_functions[i].name);
+	_cmbUserFunction->setEnabled(false);
+	layout->addWidget(_cmbUserFunction, 4, 1, 1, 2);
+	void(QComboBox::*cmbsignal)(int) = &QComboBox::currentIndexChanged;
+	connect(_cmbUserFunction, cmbsignal, this, &RobotControlWindow::onCmbUserFunctionIndexChanged);
 
 	this->setWindowTitle("Robot Control " + QString::number(_control->id()));
 
@@ -146,10 +162,16 @@ onControlConnected()
 	if (_cbShowEvents->checkState() == Qt::Checked)
 		openEventVisualizerWindow();
 
-
-	// TODO: make GUI component to change user function. just set the 0 user
-	// function here for demo purposes
-	_control->setUserFunction(&user_functions[0]);
+	// set a user function
+	if (_cbUserFunction->checkState() == Qt::Checked) {
+		int index = _cmbUserFunction->currentIndex();
+		if (index >= 0)
+			setUserFunction(static_cast<unsigned>(index));
+		else
+			unsetUserFunction();
+	}
+	else
+		unsetUserFunction();
 }
 
 
@@ -210,6 +232,47 @@ moveEvent(QMoveEvent *ev)
 	ev->accept();
 }
 
+
+void RobotControlWindow::
+onCbUserFunctionStateChanged(int state)
+{
+	if (state == Qt::Checked) {
+		_cmbUserFunction->setEnabled(true);
+		setUserFunction(_cmbUserFunction->currentIndex());
+	}
+	else {
+		_cmbUserFunction->setEnabled(false);
+		unsetUserFunction();
+	}
+}
+
+
+void RobotControlWindow::
+onCmbUserFunctionIndexChanged(int index)
+{
+	// check the value. if no item has been selected we want to unset the
+	// user function
+	if (index < 0)
+		unsetUserFunction();
+	else
+		setUserFunction(static_cast<unsigned>(index));
+}
+
+
+void RobotControlWindow::
+setUserFunction(unsigned index)
+{
+	if (index < LENGTH(user_functions))
+		_control->setUserFunction(&user_functions[index]);
+	else
+		std::cerr << "Invalid User Function ID " << index << std::endl;
+}
+
+void RobotControlWindow::
+unsetUserFunction()
+{
+	_control->unsetUserFunction();
+}
 
 
 }} // nst::gui

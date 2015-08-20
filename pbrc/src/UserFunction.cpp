@@ -10,12 +10,8 @@ void
 demo_function_1(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 {
 	static int i = 0;
-	++i;
-	if (i == 1000) {
-		cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
-		i = 0;
-	}
-
+	++i %= 1000;
+	if (!i) cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
 
 	// TODO: example to make the robot move
 	// voting system to drive left/right --> Braitenberg Vehicle
@@ -26,5 +22,7 @@ demo_function_1(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 void
 demo_function_2(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 {
-	cout << "demo function 2: robot " << control->id() << " event at (" << ev->x << ", " << ev->y << endl;
+	static int i = 0;
+	++i %= 5000;
+	if (!i) cout << "demo function 2 called 5000 times: robot " << control->id() << " event at (" << ev->x << ", " << ev->y << endl;
 }

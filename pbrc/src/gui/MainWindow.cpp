@@ -61,7 +61,7 @@ void MainWindow::
 addRobotControl()
 {
 	auto rc = new RobotControlWindow(_mdi);
-	rc->resize(250, 250);
+	rc->resize(250, 400);
 	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
 	_wins.push_back(rc);
 	rc->show();
