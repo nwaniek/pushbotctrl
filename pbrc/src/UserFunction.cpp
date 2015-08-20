@@ -7,7 +7,7 @@ using namespace nst;
 
 
 void
-demo_function_1(const RobotControl *control, const DVSEvent *ev)
+demo_function_1(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 {
 	static int i = 0;
 	++i;
@@ -24,7 +24,7 @@ demo_function_1(const RobotControl *control, const DVSEvent *ev)
 
 
 void
-demo_function_2(const RobotControl *control, const DVSEvent *ev)
+demo_function_2(shared_ptr<RobotControl> const &control, const DVSEvent *ev)
 {
 	cout << "demo function 2: robot " << control->id() << " event at (" << ev->x << ", " << ev->y << endl;
 }

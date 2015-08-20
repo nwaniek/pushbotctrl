@@ -112,7 +112,7 @@ void RobotControl::
 onDVSEventReceived(const DVSEvent *ev)
 {
 	// call the user function
-	if (_userfn) _userfn->fn(this, ev);
+	if (_userfn) _userfn->fn(shared_from_this(), ev);
 	emit DVSEventReceived(ev);
 }
 

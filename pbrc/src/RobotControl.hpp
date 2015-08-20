@@ -1,6 +1,7 @@
 #ifndef __ROBOTCONTROL_HPP__32EABE1A_2F0D_4AAB_B831_EFC05DE84126
 #define __ROBOTCONTROL_HPP__32EABE1A_2F0D_4AAB_B831_EFC05DE84126
 
+#include <memory>
 #include <QObject>
 
 // forward declarations
@@ -37,7 +38,7 @@ namespace commands {
  *
  * TODO: make the userfunction interface thread safe
  */
-class RobotControl : public QObject
+class RobotControl : public QObject, public std::enable_shared_from_this<RobotControl>
 {
 	Q_OBJECT
 

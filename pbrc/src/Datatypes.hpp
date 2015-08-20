@@ -78,7 +78,7 @@ struct RPYEvent {
  */
 struct UserFunction {
 	const char *name;
-	void (*fn)(const RobotControl *control, const DVSEvent *ev);
+	void (*fn)(std::shared_ptr<RobotControl> const &control, const DVSEvent *ev);
 };
 
 
