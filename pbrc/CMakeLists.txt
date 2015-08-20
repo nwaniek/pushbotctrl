@@ -18,7 +18,7 @@ set(SRC
 	src/SensorsProcessor.cpp
 	src/RobotControl.cpp
 	src/UserFunction.cpp
-	src/gui/Dialog.cpp
+	src/RCManager.cpp
 	src/gui/DVSEventWidget.cpp
 	src/gui/NavigationWidget.cpp
 	src/gui/MainWindow.cpp
@@ -35,7 +35,7 @@ set(HEADERS
 	src/SensorsProcessor.hpp
 	src/RobotControl.hpp
 	src/UserFunction.hpp
-	src/gui/Dialog.hpp
+	src/RCManager.hpp
 	src/gui/DVSEventWidget.hpp
 	src/gui/NavigationWidget.hpp
 	src/gui/MainWindow.hpp

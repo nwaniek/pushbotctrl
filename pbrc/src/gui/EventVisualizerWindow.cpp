@@ -18,14 +18,14 @@ namespace nst { namespace gui {
 
 
 EventVisualizerWindow::
-EventVisualizerWindow(std::shared_ptr<RobotControl> control, QWidget *parent, Qt::WindowFlags flags)
+EventVisualizerWindow(const RobotControl * const control, QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags), _control(control)
 {
 	_wdgtEvents = new DVSEventWidget(this);
 	layout()->addWidget(_wdgtEvents);
 
 	// connect the visualizer to the robotcontrol
-	connect(_control.get(), &RobotControl::DVSEventReceived, _wdgtEvents, &DVSEventWidget::newEvent);
+	connect(_control, &RobotControl::DVSEventReceived, _wdgtEvents, &DVSEventWidget::newEvent);
 
 	setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -34,7 +34,7 @@ EventVisualizerWindow(std::shared_ptr<RobotControl> control, QWidget *parent, Qt
 EventVisualizerWindow::
 ~EventVisualizerWindow()
 {
-	disconnect(_control.get(), &RobotControl::DVSEventReceived, _wdgtEvents, &DVSEventWidget::newEvent);
+	disconnect(_control, &RobotControl::DVSEventReceived, _wdgtEvents, &DVSEventWidget::newEvent);
 }
 
 

@@ -8,6 +8,7 @@ class QMdiArea;
 class QMdiSubWindow;
 class QAction;
 class QMenu;
+class QToolBar;
 
 namespace nst { namespace gui {
 
@@ -22,13 +23,17 @@ public:
 
 public slots:
 	void addRobotControl();
+	void onEmergencyShutdown();
 	void onSubwindowClosing(QMdiSubWindow *win);
 
 private:
 	QMdiArea *_mdi = nullptr;
 	std::vector<QMdiSubWindow*> _wins;
 
+	QToolBar *_toolbar = nullptr;
 	QMenu *_mnuFile = nullptr;
+
+	QAction *_actEmergencyShutdown = nullptr;
 	QAction *_actAddRobotControl = nullptr;
 	QAction *_actClose = nullptr;
 };

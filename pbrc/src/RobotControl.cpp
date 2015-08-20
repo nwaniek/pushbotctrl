@@ -5,6 +5,7 @@
 #include "Datatypes.hpp"
 #include "Commands.hpp"
 #include "utils.hpp"
+#include "RCManager.hpp"
 
 #include <iostream>
 #include <QRegularExpression>
@@ -14,7 +15,8 @@ namespace nst {
 RobotControl::
 RobotControl()
 {
-	_id = get_robot_id();
+	// register this instance of the robot control and get an ID
+	_id = rcman_register(this);
 
 	// initialize required threads and connections
 	_con_thread = new QThread();
@@ -61,7 +63,7 @@ RobotControl::
 	_parser_thread->quit();
 	_con_thread->quit();
 
-	release_robot_id(_id);
+	rcman_unregister(this);
 }
 
 
@@ -112,7 +114,7 @@ void RobotControl::
 onDVSEventReceived(const DVSEvent *ev)
 {
 	// call the user function
-	if (_userfn) _userfn->fn(shared_from_this(), ev);
+	if (_userfn) _userfn->fn(this, ev);
 	emit DVSEventReceived(ev);
 }
 
@@ -150,10 +152,10 @@ onResponseReceived(const QString *str)
         }
         // ... and send the packed struct to update RPY
          _sensors->newSample(se);
+	emit responseReceived(str);
+
         delete se;
         delete str;
-
-	emit responseReceived(str);
 }
 
 
@@ -210,9 +212,9 @@ drive(float x, float y)
 	m0speed *= m0mul;
 	m1speed *= m1mul;
 
-	// finally send commands
-	_con->sendCommand(new commands::MV0(static_cast<int>(floor(m0speed))));
-	_con->sendCommand(new commands::MV1(static_cast<int>(floor(m1speed))));
+	// finally send commands. use decaying ones
+	_con->sendCommand(new commands::MVD0(static_cast<int>(floor(m0speed))));
+	_con->sendCommand(new commands::MVD1(static_cast<int>(floor(m1speed))));
 }
 
 

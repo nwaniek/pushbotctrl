@@ -31,9 +31,9 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	std::cout << LENGTH(user_functions) << " user functions found" << std::endl;
 
 	// create control and hook into signals
-	_control = std::make_shared<RobotControl>();
-	connect(_control.get(), &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
-	connect(_control.get(), &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
+	_control = new RobotControl();
+	connect(_control, &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
+	connect(_control, &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
 
 	// create GUI
 	_centralWidget = new QFrame(this);
@@ -52,9 +52,11 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(_btnConnect, &QPushButton::clicked, this, &RobotControlWindow::onBtnConnectClicked);
 
 	// navigation widget
-	_wdgtNav = new NavigationWidget(_centralWidget);
+	_wdgtNav = new NavigationWidget(20, _centralWidget);
 	layout->addWidget(_wdgtNav, 1, 0, 1, 3);
 	connect(_wdgtNav, &NavigationWidget::navigationUpdate, this, &RobotControlWindow::onNavigationUpdate);
+	connect(_control, &RobotControl::disconnected, _wdgtNav, &NavigationWidget::reset);
+
 
 	// visualize events?
 	_cbShowEvents = new QCheckBox("visualize DVS events", _centralWidget);
@@ -178,7 +180,10 @@ onControlConnected()
 void RobotControlWindow::
 onControlDisconnected()
 {
+	// remember the old state of the cb
+	auto old = _cbShowEvents->checkState();
 	closeEventVisualizerWindow();
+	_cbShowEvents->setCheckState(old);
 	_edtIP->setReadOnly(false);
 	_edtIP->setEnabled(true);
 	_btnConnect->setText("connect");
@@ -190,7 +195,12 @@ void RobotControlWindow::
 onNavigationUpdate(const QPointF pos)
 {
 	if (!_control->isConnected()) return;
-	_control->drive(pos.x(), pos.y());
+
+	// progressive increase of speed -> simply take the square
+	if (_linear_control_mode)
+		_control->drive(pos.x(), pos.y());
+	else
+		_control->drive(pos.x() * pos.x(), pos.y() * pos.y());
 }
 
 
@@ -212,6 +222,7 @@ onEventVisualizerClosing()
 	// remove the pointer to the window to make sure that we do not
 	// accidentally access it -> segfault
 	_winEventVisualizer = nullptr;
+	_cbShowEvents->setCheckState(Qt::Unchecked);
 }
 
 

@@ -35,7 +35,6 @@ public:
 	void closeEvent(QCloseEvent *ev) override;
 	void moveEvent(QMoveEvent *ev) override;
 
-
 signals:
 	void closing(QMdiSubWindow *win);
 
@@ -60,7 +59,11 @@ private:
 	void setUserFunction(unsigned index);
 	void unsetUserFunction();
 
-	std::shared_ptr<RobotControl> _control;
+	RobotControl *_control;
+
+	// take the NavigationWidget data directly, or transform. see function
+	// onNavigationUpdate for details
+	bool _linear_control_mode = false;
 
 	QFrame *_centralWidget = nullptr;
 	QLineEdit *_edtIP = nullptr;

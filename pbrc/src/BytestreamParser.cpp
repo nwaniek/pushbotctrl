@@ -14,7 +14,7 @@ BytestreamParser:: BytestreamParser(uint8_t id, DVSEvent::timeformat_t fmt)
 BytestreamParser::
 ~BytestreamParser()
 {
-	std::cout << "~BytestreamParser" << std::endl;
+	// std::cout << "~BytestreamParser" << std::endl;
 }
 
 
@@ -36,22 +36,16 @@ parse(const unsigned char c)
 		if ((c & 0x80) == 0) {
 			_response->append(c);
 			if (c == '\n') {
-
-				if (!_response) std::cout << "PANIC RESPONSE" << std::endl;
-				emit responseReceived(std::move(_response));
+				if (!_response)
+					std::cerr << "EE: BytestreamParser _response is nullptr where it should not be" << std::endl;
+				else
+					emit responseReceived(std::move(_response));
 
 				_response = new QString();
 				_response->reserve(64);
 			}
-			else {
-				// if (!_response) {
-					// create a new string and reserve some
-					// space to speed up appending of items
-				// 	_response = new QString();
-				// 	_response->reserve(64);
-				// }
+			else
 				_response->append(c);
-			}
 		}
 		else {
 			_ev = new DVSEvent;
@@ -69,6 +63,7 @@ parse(const unsigned char c)
 		_ev->y = static_cast<uint16_t>(c) & 0x7F;
 		if (_timeformat == DVSEvent::TIMEFORMAT_0BYTES) {
 			emit eventReceived(std::move(_ev));
+			_ev = nullptr;
 			_state = 0;
 		}
 		else
@@ -87,6 +82,7 @@ parse(const unsigned char c)
 		if (_timeformat == DVSEvent::TIMEFORMAT_2BYTES) {
 			_ev->t |= static_cast<uint64_t>(c);
 			emit eventReceived(std::move(_ev));
+			_ev = nullptr;
 			_state = 0;
 		}
 		else {
@@ -98,6 +94,7 @@ parse(const unsigned char c)
 	case 4:
 		_ev->t |= static_cast<uint64_t>(c);
 		emit eventReceived(std::move(_ev));
+		_ev = nullptr;
 		_state = 0;
 		break;
 
@@ -105,7 +102,8 @@ parse(const unsigned char c)
 		// TODO: report the error to some other function, don't just
 		// print it
 		// found a state that should not be there. exit
-		std::cerr << "EE: BytestreamParser in unknown state" << std::endl;
+		std::cerr << "EE: BytestreamParser in unknown state. resetting" << std::endl;
+		_state = 0;
 		break;
 	}
 
@@ -123,8 +121,6 @@ parseData(const QByteArray &data)
 void BytestreamParser::
 set_timeformat(DVSEvent::timeformat_t fmt)
 {
-	// TODO: Check if we are outside state0 -> if so, this may introduce
-	// errors
 	_timeformat = fmt;
 }
 

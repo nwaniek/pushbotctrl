@@ -39,8 +39,5 @@ typename std::deque<T>::iterator insert_sorted(std::deque<T> &v, T const& t) {
 }
 
 
-void release_robot_id(uint8_t id);
-uint8_t get_robot_id();
-
 #endif /* __UTILS_HPP__B69DECA2_4EA9_41CC_9E83_A9BBBB6E06C6 */
 

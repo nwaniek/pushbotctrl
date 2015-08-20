@@ -6,6 +6,7 @@
 #include <QResizeEvent>
 #include <QPainter>
 #include <QColor>
+#include <QTimer>
 #include <algorithm>
 #include <iostream>
 #include "utils.hpp"
@@ -14,19 +15,32 @@ namespace nst { namespace gui {
 
 
 NavigationWidget::
-NavigationWidget(QWidget *parent)
+NavigationWidget(int update_interval, QWidget *parent)
 : QWidget(parent)
+, _update_interval(update_interval)
 , _cmd_radius(5)
 , _radius(0)
 , _center(0, 0)
 , _cmd_pos(0, 0)
 , _cmd_visual_pos(0, 0)
-{}
+{
+	_timer = new QTimer();
+	connect(_timer, &QTimer::timeout, this, &NavigationWidget::timerTimeout);
+	_timer->setInterval(_update_interval);
+	_timer->start();
+}
 
 
 NavigationWidget::
 ~NavigationWidget()
 {}
+
+
+void NavigationWidget::
+timerTimeout()
+{
+	emit navigationUpdate(QPointF(_cmd_pos));
+}
 
 
 void NavigationWidget::
@@ -37,6 +51,17 @@ resizeEvent(QResizeEvent *ev)
 	this->_radius = std::min(_center.x(), _center.y()) - this->_cmd_radius;
 
 	cmdToVisualPos();
+}
+
+
+void NavigationWidget::
+reset()
+{
+	_cmd_pos.setX(0);
+	_cmd_pos.setY(0);
+	cmdToVisualPos();
+	emit navigationUpdate(QPointF(_cmd_pos));
+	update();
 }
 
 

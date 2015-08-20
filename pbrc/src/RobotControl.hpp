@@ -38,7 +38,7 @@ namespace commands {
  *
  * TODO: make the userfunction interface thread safe
  */
-class RobotControl : public QObject, public std::enable_shared_from_this<RobotControl>
+class RobotControl : public QObject
 {
 	Q_OBJECT
 

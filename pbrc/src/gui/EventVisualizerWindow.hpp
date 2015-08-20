@@ -23,7 +23,7 @@ class EventVisualizerWindow : public QMdiSubWindow
 {
 	Q_OBJECT
 public:
-	EventVisualizerWindow(std::shared_ptr<RobotControl> control, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	EventVisualizerWindow(const RobotControl * const control, QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~EventVisualizerWindow();
 
 	void resizeEvent(QResizeEvent *ev);
@@ -36,7 +36,7 @@ signals:
 
 
 private:
-	std::shared_ptr<RobotControl> _control;
+	const RobotControl * const _control;
 	DVSEventWidget *_wdgtEvents = nullptr;
 };
 
