@@ -24,8 +24,10 @@ void demo_function_1(
 		shared_ptr<DVSEvent> dvs_ev,
 		shared_ptr<SensorEvent> sensor_ev);
 
-//void demo_function_2(RobotControl * const control, const DVSEvent *ev);
-
+void demo_function_2(
+		RobotControl * const control,
+		shared_ptr<DVSEvent> dvs_ev,
+		shared_ptr<SensorEvent> sensor_ev);
 
 /*
  * Add all the functions that you want to use to this list. Entries in this list
@@ -33,7 +35,7 @@ void demo_function_1(
  */
 static const UserFunction user_functions[] = {
 	{"First demo function",  demo_function_1},
-	// {"Second demo function", demo_function_2},
+	{"Second demo function", demo_function_2},
 };
 
 
