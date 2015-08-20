@@ -19,8 +19,8 @@ using namespace nst;
  * Do _NOT_ call delete on control or event!
  */
 
-void demo_function_1(const RobotControl * const control, const DVSEvent *ev);
-void demo_function_2(const RobotControl * const control, const DVSEvent *ev);
+void demo_function_1(RobotControl * const control, const DVSEvent *ev);
+void demo_function_2(RobotControl * const control, const DVSEvent *ev);
 
 
 /*

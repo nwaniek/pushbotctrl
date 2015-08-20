@@ -68,7 +68,7 @@ struct RPYEvent {
  */
 struct UserFunction {
 	const char *name;
-	void (*fn)(const RobotControl * const control, const DVSEvent *ev);
+	void (*fn)(RobotControl * const control, const DVSEvent *ev);
 };
 
 

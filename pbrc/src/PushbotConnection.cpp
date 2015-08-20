@@ -29,7 +29,8 @@ connect(const QString ip, uint16_t port)
 		return;
 	}
 
-	std::cout << "PushbotConnection: attempting connect" << std::endl;
+	// if we already have a socket connection, re-establish the socket first
+	if (this->_sock) disconnect();
 
 	this->_sock = new QTcpSocket(this);
 	QObject::connect(_sock, &QTcpSocket::connected, this, &PushbotConnection::_sock_connected);
