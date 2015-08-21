@@ -94,23 +94,18 @@ _sock_onStateChanged(QAbstractSocket::SocketState /*state*/)
 
 
 void PushbotConnection::
-sendCommand(const commands::Command *cmd)
+sendCommand(commands::Command *cmd)
 {
 	// little trick to avoid issues with the threading. this essentially
 	// moves the command pointer to the thread
-	// TODO: this is presumably not thread-safe! if anyone else accesses the
-	// command meanwhile, everything will EXPLODE!
 	if (thread() != QThread::currentThread()) {
-		QMetaObject::invokeMethod(this, "sendCommand", Qt::QueuedConnection, Q_ARG(const commands::Command*, cmd));
+		QMetaObject::invokeMethod(this, "sendCommand", Qt::QueuedConnection, Q_ARG(commands::Command*, cmd));
 		return;
 	}
 
 	if (!_sock || !cmd)
 		return;
 	_sock << *cmd;
-
-	// TODO: shall we delete the command afterwards?
-	// TODO: use a smartpointer instead?
 	delete cmd;
 }
 

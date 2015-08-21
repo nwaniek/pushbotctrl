@@ -56,10 +56,8 @@ demo_function_2(RobotControl * const control,
 		}
 	}
 
-	// if (!i) cout << "demo function 1 called 1000 times. robot " << unsigned(control->id()) << " event at (" << ev->x << ", " << ev->y << ")" << endl;
-
-
-	// Do not send commands to the robot too often
+	// every user function gets called every 15ms without a valid DVS or
+	// Sensor event -> use this to send commands to the robot
 
 	// TODO: example to make the robot move
 	// voting system to drive left/right --> Braitenberg Vehicle

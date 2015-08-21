@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <deque>
 #include <iostream>
+#include <memory>
 
 
 /**
@@ -39,6 +40,14 @@ typename std::deque<T>::iterator insert_sorted(std::deque<T> &v, T const& t) {
 	return v.insert(std::upper_bound(v.begin(), v.end(), t), t);
 }
 
+/**
+ * make a unique_ptr. make_unique is missing from C++11, only available in C++14
+ */
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args)
+{
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
 
 #endif /* __UTILS_HPP__B69DECA2_4EA9_41CC_9E83_A9BBBB6E06C6 */
 

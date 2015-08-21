@@ -9,14 +9,7 @@ using namespace nst;
 
 
 /*
- * Declarations of your functions go here. they all have to accept the same
- * arguments:
- *	RobotControl *control
- *	DVSEvent *ev
- * control is a pointer to the control interface for the robot from which
- * the event is coming, and ev a pointer to the event structure.
- *
- * Do _NOT_ call delete on control or event!
+ * TODO: DESCRIPTION. Each user function will be called at least every 15ms
  */
 
 void demo_function_1(

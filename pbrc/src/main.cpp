@@ -11,6 +11,7 @@ main (int argc, char *argv[])
 
 	// register the command infrastructure. As we pass along only pointers,
 	// use the base class here.
+	qRegisterMetaType<commands::Command*>("commands::Command*");
 	qRegisterMetaType<const commands::Command*>("const commands::Command*");
 
 	// prepare_robot_ids();

@@ -18,7 +18,7 @@ namespace nst { namespace gui {
 
 
 EventVisualizerWindow::
-EventVisualizerWindow(const RobotControl * const control, QWidget *parent, Qt::WindowFlags flags)
+EventVisualizerWindow(RobotControl *control, QWidget *parent, Qt::WindowFlags flags)
 : QMdiSubWindow(parent, flags), _control(control)
 {
 	_wdgtEvents = new DVSEventWidget(this);

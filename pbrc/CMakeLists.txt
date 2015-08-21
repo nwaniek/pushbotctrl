@@ -12,7 +12,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SRC
 	src/main.cpp
-	src/utils.cpp
 	src/BytestreamParser.cpp
 	src/PushbotConnection.cpp
 	src/SensorsProcessor.cpp
@@ -24,6 +23,7 @@ set(SRC
 	src/gui/MainWindow.cpp
 	src/gui/RobotControlWindow.cpp
 	src/gui/EventVisualizerWindow.cpp
+	src/gui/NavigationWindow.cpp
 )
 
 set(HEADERS
@@ -41,6 +41,7 @@ set(HEADERS
 	src/gui/MainWindow.hpp
 	src/gui/RobotControlWindow.hpp
 	src/gui/EventVisualizerWindow.hpp
+	src/gui/NavigationWindow.hpp
 )
 
 include_directories(src)

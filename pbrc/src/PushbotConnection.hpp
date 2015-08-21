@@ -1,12 +1,13 @@
 #ifndef __PUSHBOTCONNECTION_HPP__3E71037A_2D7F_456C_B919_BF491C99A569
 #define __PUSHBOTCONNECTION_HPP__3E71037A_2D7F_456C_B919_BF491C99A569
 
+#include <iostream>
+#include <memory>
 #include <QMutex>
 #include <QThread>
 #include <QTcpSocket>
 #include <QMetaObject>
 #include <QString>
-#include <iostream>
 
 namespace nst {
 
@@ -32,7 +33,12 @@ signals:
 public slots:
 	void connect(const QString ip, uint16_t port = 56000);
 	void disconnect();
-	void sendCommand(const commands::Command *cmd);
+
+	/**
+	 * send a command to the PushBot using the ethernet connection. this
+	 * will delete the cmd afterwards!
+	 */
+	void sendCommand(commands::Command *cmd);
 	void flush();
 
 private slots:

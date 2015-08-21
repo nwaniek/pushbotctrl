@@ -8,6 +8,7 @@
 #include <QMdiSubWindow>
 #include <QApplication>
 #include <QToolBar>
+#include <QSizePolicy>
 
 #include "utils.hpp"
 #include "RCManager.hpp"
@@ -76,7 +77,9 @@ void MainWindow::
 addRobotControl()
 {
 	auto rc = new RobotControlWindow(_mdi);
-	rc->resize(250, 350);
+	// rc->resize(250, 300);
+	rc->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
 	connect(rc, &RobotControlWindow::closing, this, &MainWindow::onSubwindowClosing);
 	_wins.push_back(rc);
 	rc->show();

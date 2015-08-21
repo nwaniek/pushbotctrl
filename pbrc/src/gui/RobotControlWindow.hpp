@@ -19,7 +19,7 @@ class RobotControl;
 namespace gui {
 
 // forward declarations
-class NavigationWidget;
+class NavigationWindow;
 class EventVisualizerWindow;
 
 /**
@@ -44,32 +44,32 @@ private slots:
 	void onShowEventsStateChanged(int state);
 	void onCbUserFunctionStateChanged(int state);
 	void onCmbUserFunctionIndexChanged(int index);
+	void onCbManualControlStateChanged(int state);
 
 	// 'sub'-window notifications
 	void onEventVisualizerClosing();
+	void onNavigationClosing();
 
 	// control slots
-	void onNavigationUpdate(const QPointF pos);
+
 	void onControlConnected();
 	void onControlDisconnected();
 
 private:
 	void openEventVisualizerWindow();
 	void closeEventVisualizerWindow();
+	void openNavigationWindow();
+	void closeNavigationWindow();
 	void setUserFunction(unsigned index);
 	void unsetUserFunction();
 
 	RobotControl *_control;
 
-	// take the NavigationWidget data directly, or transform. see function
-	// onNavigationUpdate for details
-	bool _linear_control_mode = false;
-
 	QFrame *_centralWidget = nullptr;
 	QLineEdit *_edtIP = nullptr;
 	QPushButton *_btnConnect = nullptr;
-	NavigationWidget *_wdgtNav = nullptr;
 
+	QCheckBox *_cbManualControl = nullptr;
 	QCheckBox *_cbShowEvents = nullptr;
 	QCheckBox *_cbMagnetWindows = nullptr;
 	QCheckBox *_cbUserFunction = nullptr;
@@ -78,6 +78,7 @@ private:
 
 	// 'sub'-windows
 	EventVisualizerWindow *_winEventVisualizer = nullptr;
+	NavigationWindow *_winNavigation = nullptr;
 };
 
 

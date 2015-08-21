@@ -7,7 +7,9 @@
 #include "utils.hpp"
 #include "RCManager.hpp"
 
-#include <iostream>
+#include <QString>
+#include <QThread>
+#include <QTimer>
 
 namespace nst {
 
@@ -17,7 +19,11 @@ RobotControl()
 	// register this instance of the robot control and get an ID
 	_id = rcman_register(this);
 
-	// initialize required threads and connections
+	// initialize required timers, threads and connections
+	_timer_uf = new QTimer();
+	_timer_uf->setInterval(15);
+	connect(_timer_uf, &QTimer::timeout, this, &RobotControl::onTimerUFTimeout);
+
 	_con_thread = new QThread();
 	_parser_thread = new QThread();
 
@@ -68,19 +74,11 @@ RobotControl::
 
 
 void RobotControl::
-sendCommand(const commands::Command *cmd)
-{
-	// TODO: CHANGE THIS!
-	_con->sendCommand(cmd);
-}
-
-
-void RobotControl::
 resetRobot()
 {
 	// always send an empty command first. This will push the PushBot's
 	// state machine to a state that new commands
-	_con->sendCommand(new commands::Empty);
+	_con->sendCommand(new commands::Empty());
 
 	// enable event streaming, sensor streaming, and motor control
 	_con->sendCommand(new commands::DVS(true));
@@ -217,6 +215,71 @@ disableEventstream()
 	_con->sendCommand(new commands::DVS(false));
 }
 
+void RobotControl::
+enableLED(commands::LED::led_identifier_t id, unsigned base_freq, float relative)
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::LED(id, base_freq, relative));
+}
+
+void RobotControl::
+disableLED(commands::LED::led_identifier_t id)
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::LED(id));
+}
+
+void RobotControl::
+enableLEDFront(unsigned base_freq, float relative)
+{
+	enableLED(commands::LED::Front, base_freq, relative);
+}
+
+void RobotControl::
+disableLEDFront()
+{
+	disableLED(commands::LED::Front);
+}
+
+void RobotControl::
+enableLEDBack(unsigned base_freq, float relative)
+{
+	enableLED(commands::LED::Back, base_freq, relative);
+}
+
+void RobotControl::
+disableLEDBack()
+{
+	disableLED(commands::LED::Back);
+}
+
+void RobotControl::
+enableLaserPointer(unsigned base_freq, float relative)
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::LaserPointer(base_freq, relative));
+}
+
+void RobotControl::
+disableLaserPointer()
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::LaserPointer());
+}
+
+void RobotControl::
+enableBuzzer(unsigned base_freq, float relative)
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::Buzzer(base_freq, relative));
+}
+
+void RobotControl::
+disableBuzzer()
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::Buzzer());
+}
 
 uint8_t RobotControl::
 id() const
@@ -229,6 +292,7 @@ void RobotControl::
 setUserFunction(const UserFunction *fn)
 {
 	_userfn = fn;
+	_timer_uf->start();
 }
 
 
@@ -236,6 +300,7 @@ void RobotControl::
 unsetUserFunction()
 {
 	_userfn = nullptr;
+	_timer_uf->stop();
 }
 
 
@@ -244,6 +309,13 @@ onSensorEvent(std::shared_ptr<SensorEvent> ev)
 {
 	if (_userfn) _userfn->fn(this, std::shared_ptr<DVSEvent>(), ev);
 	emit sensorEvent(ev);
+}
+
+
+void RobotControl::
+onTimerUFTimeout()
+{
+	if (_userfn) _userfn->fn(this, std::shared_ptr<DVSEvent>(), std::shared_ptr<SensorEvent>());
 }
 
 } // nst::

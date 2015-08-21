@@ -3,8 +3,10 @@
 
 #include <memory>
 #include <QObject>
+#include "Commands.hpp"
 
 // forward declarations
+class QTimer;
 class QThread;
 class QString;
 
@@ -18,10 +20,6 @@ class BytestreamParser;
 struct UserFunction;
 struct DVSEvent;
 struct SensorEvent;
-
-namespace commands {
-	struct Command;
-}
 
 
 /**
@@ -65,7 +63,8 @@ public:
 
 	/*
 	 * drive the robot, allowed are commands to live within [-1,1] for each
-	 * motor
+	 * motor. The coordinate system is such that x points to the left, y to
+	 * the front of the robot
 	 */
 	void drive(const float x, const float y);
 
@@ -74,6 +73,31 @@ public:
 	 */
 	void enableEventstream();
 	void disableEventstream();
+
+	/*
+	 * enable/disable of LEDs. you need to specify a base frequency in which
+	 * the blinking operates and a relative amount of time in which the LED
+	 * will be turned on.
+	 */
+	void enableLEDFront(unsigned base_freq, float relative);
+	void enableLEDBack(unsigned base_freq, float relative);
+	void disableLEDFront();
+	void disableLEDBack();
+
+	/**
+	 * enable/disable laser pointer. give a base frequency and a relative
+	 * amount of time in which the pointer shall be active.
+	 */
+	void enableLaserPointer(unsigned base_freq, float relative);
+	void disableLaserPointer();
+
+	/**
+	 * enable/disable the buzzer. you need to specify a base frequency and
+	 * relative amount of time the buzzer shall be active within this
+	 * frequency.
+	 */
+	void enableBuzzer(unsigned base_freq, float relative);
+	void disableBuzzer();
 
 	/**
 	 * return the Robot Control ID
@@ -84,11 +108,11 @@ signals:
 	void connected();
 	void disconnected();
 
-	// TODO: change to shared_ptr ?
 	void responseReceived(const QString *str);
-
 	void DVSEventReceived(std::shared_ptr<DVSEvent> ev);
 	void sensorEvent(std::shared_ptr<SensorEvent> ev);
+
+	// TODO: signals for LED, Buzzer, LaserPointer settings?
 
 private slots:
 	void onPushbotConnected();
@@ -96,11 +120,13 @@ private slots:
 	void onDVSEventReceived(DVSEvent *ev);
 	void onResponseReceived(QString *str);
 	void onSensorEvent(std::shared_ptr<SensorEvent> ev);
+	void onTimerUFTimeout();
 
 private:
-	void sendCommand(const commands::Command *cmd);
+	void enableLED(commands::LED::led_identifier_t id, unsigned base_freq, float relative);
+	void disableLED(commands::LED::led_identifier_t id);
 
-
+	QTimer *_timer_uf = nullptr;
 	QThread *_con_thread = nullptr;
 	QThread *_parser_thread = nullptr;
 

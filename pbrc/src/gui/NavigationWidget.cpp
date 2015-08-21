@@ -39,7 +39,7 @@ NavigationWidget::
 void NavigationWidget::
 timerTimeout()
 {
-	emit navigationUpdate(QPointF(_cmd_pos));
+	if (isEnabled()) emit navigationUpdate(QPointF(_cmd_pos));
 }
 
 
@@ -76,6 +76,8 @@ cmdToVisualPos()
 void NavigationWidget::
 mouseMoveEvent(QMouseEvent *ev)
 {
+	if (!isEnabled()) return;
+
 	QPointF old_pos(this->_cmd_pos);
 	float x = ev->pos().x() - _center.x();
 	float y = ev->pos().y() - _center.y();
