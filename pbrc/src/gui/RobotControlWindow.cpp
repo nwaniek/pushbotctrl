@@ -268,13 +268,16 @@ openEventVisualizerWindow()
 	_winEventVisualizer->resize(250, 250);
 	_winEventVisualizer->show();
 
+	// move it right next to the existing window
 	int xoffset = geom.topRight().x();
+	int yoffset = geom.topRight().y();
 	if (_winNavigation) {
 		const QRect geom2 = _winNavigation->frameGeometry();
 		xoffset = geom2.topRight().x();
+		yoffset = geom2.topRight().y();
 	}
 
-	_winEventVisualizer->move(xoffset, geom.topRight().y());
+	_winEventVisualizer->move(xoffset, yoffset);
 	_winEventVisualizer->setWindowTitle("Events: " + _edtIP->text());
 
 	connect(_winEventVisualizer, &EventVisualizerWindow::closing, this, &RobotControlWindow::onEventVisualizerClosing);
@@ -291,12 +294,14 @@ openNavigationWindow()
 	_winNavigation->show();
 
 	int xoffset = geom.topRight().x();
+	int yoffset = geom.topRight().y();
 	if (_winEventVisualizer) {
 		const QRect geom2 = _winEventVisualizer->frameGeometry();
 		xoffset = geom2.topRight().x();
+		yoffset = geom2.topRight().y();
 	}
 
-	_winNavigation->move(xoffset, geom.topRight().y());
+	_winNavigation->move(xoffset, yoffset);
 	_winNavigation->setWindowTitle("Navigation " + _edtIP->text());
 
 	connect(_winNavigation, &NavigationWindow::closing, this, &RobotControlWindow::onNavigationClosing);
