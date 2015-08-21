@@ -109,13 +109,15 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _edtLPBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtLPBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtLPBaseFreq, frame_row, 1);
+	_edtLPBaseFreq->setEnabled(false);
 
 	auto _lblLPBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblLPBaseFreq, frame_row, 2);
 
-	auto _edtLPRelative = new QLineEdit("0.5", _frameFreq);
+	auto _edtLPRelative = new QLineEdit("50", _frameFreq);
 	_edtLPRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLPRelative, frame_row, 3);
+	_edtLPRelative->setEnabled(false);
 
 	auto _lblLPRelative = new QLabel("%");
 	_layoutFreq->addWidget(_lblLPRelative, frame_row, 4);
@@ -130,13 +132,15 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _edtBuzzerBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtBuzzerBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtBuzzerBaseFreq, frame_row, 1);
+	_edtBuzzerBaseFreq->setEnabled(false);
 
 	auto _lblBuzzerBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblBuzzerBaseFreq, frame_row, 2);
 
-	auto _edtBuzzerRelative = new QLineEdit("0.5", _frameFreq);
+	auto _edtBuzzerRelative = new QLineEdit("50", _frameFreq);
 	_edtBuzzerRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtBuzzerRelative, frame_row, 3);
+	_edtBuzzerRelative->setEnabled(false);
 
 	auto _lblBuzzerRelative = new QLabel("%");
 	_layoutFreq->addWidget(_lblBuzzerRelative, frame_row, 4);
@@ -151,13 +155,15 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _edtLEDFrontBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtLEDFrontBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtLEDFrontBaseFreq, frame_row, 1);
+	_edtLEDFrontBaseFreq->setEnabled(false);
 
 	auto _lblLEDFrontBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblLEDFrontBaseFreq, frame_row, 2);
 
-	auto _edtLEDFrontRelative = new QLineEdit("0.5", _frameFreq);
+	auto _edtLEDFrontRelative = new QLineEdit("50", _frameFreq);
 	_edtLEDFrontRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLEDFrontRelative, frame_row, 3);
+	_edtLEDFrontRelative->setEnabled(false);
 
 	auto _lblLEDFrontRelative = new QLabel("%");
 	_layoutFreq->addWidget(_lblLEDFrontRelative, frame_row, 4);
@@ -172,13 +178,15 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _edtLEDBackBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtLEDBackBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtLEDBackBaseFreq, frame_row, 1);
+	_edtLEDBackBaseFreq->setEnabled(false);
 
 	auto _lblLEDBackBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblLEDBackBaseFreq, frame_row, 2);
 
-	auto _edtLEDBackRelative = new QLineEdit("0.5", _frameFreq);
+	auto _edtLEDBackRelative = new QLineEdit("50", _frameFreq);
 	_edtLEDBackRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLEDBackRelative, frame_row, 3);
+	_edtLEDBackRelative->setEnabled(false);
 
 	auto _lblLEDBackRelative = new QLabel("%");
 	_layoutFreq->addWidget(_lblLEDBackRelative, frame_row, 4);
