@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <QObject>
-#include "Commands.hpp"
 
 // forward declarations
 class QTimer;
@@ -20,6 +19,10 @@ class BytestreamParser;
 struct UserFunction;
 struct DVSEvent;
 struct SensorEvent;
+
+namespace commands {
+	struct Command;
+} // commands;
 
 
 /**
@@ -79,10 +82,8 @@ public:
 	 * the blinking operates and a relative amount of time in which the LED
 	 * will be turned on.
 	 */
-	void enableLEDFront(unsigned base_freq, float relative);
-	void enableLEDBack(unsigned base_freq, float relative);
-	void disableLEDFront();
-	void disableLEDBack();
+	void enableLEDs(unsigned base_freq, float relative_front, float relative_back);
+	void disableLEDs();
 
 	/**
 	 * enable/disable laser pointer. give a base frequency and a relative
@@ -112,8 +113,6 @@ signals:
 	void DVSEventReceived(std::shared_ptr<DVSEvent> ev);
 	void sensorEvent(std::shared_ptr<SensorEvent> ev);
 
-	// TODO: signals for LED, Buzzer, LaserPointer settings?
-
 private slots:
 	void onPushbotConnected();
 	void onPushbotDisconnected();
@@ -123,9 +122,6 @@ private slots:
 	void onTimerUFTimeout();
 
 private:
-	void enableLED(commands::LED::led_identifier_t id, unsigned base_freq, float relative);
-	void disableLED(commands::LED::led_identifier_t id);
-
 	QTimer *_timer_uf = nullptr;
 	QThread *_con_thread = nullptr;
 	QThread *_parser_thread = nullptr;

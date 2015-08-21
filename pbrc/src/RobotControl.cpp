@@ -90,8 +90,8 @@ resetRobot()
 	_con->sendCommand(new commands::MV1(0));
 
 	// disable top LEDs
-	_con->sendCommand(new commands::LED(commands::LED::Front));
-	_con->sendCommand(new commands::LED(commands::LED::Back));
+	_con->sendCommand(new commands::LED());
+	_con->sendCommand(new commands::LED());
 
 	// disable buzzer
 	_con->sendCommand(new commands::Buzzer());
@@ -216,41 +216,17 @@ disableEventstream()
 }
 
 void RobotControl::
-enableLED(commands::LED::led_identifier_t id, unsigned base_freq, float relative)
+enableLEDs(unsigned base_freq, float relative_front, float relative_back)
 {
 	if (!_is_connected) return;
-	_con->sendCommand(new commands::LED(id, base_freq, relative));
+	_con->sendCommand(new commands::LED(base_freq, relative_front, relative_back));
 }
 
 void RobotControl::
-disableLED(commands::LED::led_identifier_t id)
+disableLEDs()
 {
 	if (!_is_connected) return;
-	_con->sendCommand(new commands::LED(id));
-}
-
-void RobotControl::
-enableLEDFront(unsigned base_freq, float relative)
-{
-	enableLED(commands::LED::Front, base_freq, relative);
-}
-
-void RobotControl::
-disableLEDFront()
-{
-	disableLED(commands::LED::Front);
-}
-
-void RobotControl::
-enableLEDBack(unsigned base_freq, float relative)
-{
-	enableLED(commands::LED::Back, base_freq, relative);
-}
-
-void RobotControl::
-disableLEDBack()
-{
-	disableLED(commands::LED::Back);
+	_con->sendCommand(new commands::LED());
 }
 
 void RobotControl::

@@ -41,10 +41,14 @@ signals:
 private slots:
 	// ui slots
 	void onBtnConnectClicked();
-	void onShowEventsStateChanged(int state);
+	void onCbShowEventsStateChanged(int state);
 	void onCbUserFunctionStateChanged(int state);
 	void onCmbUserFunctionIndexChanged(int index);
 	void onCbManualControlStateChanged(int state);
+
+	void onCbLaserPointerStateChanged(int state);
+	void onCbBuzzerStateChanged(int state);
+	void onCbLEDsStateChanged(int state);
 
 	// 'sub'-window notifications
 	void onEventVisualizerClosing();
@@ -63,6 +67,10 @@ private:
 	void setUserFunction(unsigned index);
 	void unsetUserFunction();
 
+	void laserpointerSettingsChanged();
+	void buzzerSettingsChanged();
+	void ledSettingsChanged();
+
 	RobotControl *_control;
 
 	QFrame *_centralWidget = nullptr;
@@ -73,6 +81,17 @@ private:
 	QCheckBox *_cbShowEvents = nullptr;
 	QCheckBox *_cbMagnetWindows = nullptr;
 	QCheckBox *_cbUserFunction = nullptr;
+	QCheckBox *_cbLaserPointer = nullptr;
+	QCheckBox *_cbBuzzer = nullptr;
+	QCheckBox *_cbLEDs = nullptr;
+
+	QLineEdit *_edtLPBaseFreq = nullptr;
+	QLineEdit *_edtLPRelative = nullptr;
+	QLineEdit *_edtBuzzerBaseFreq = nullptr;
+	QLineEdit *_edtBuzzerRelative = nullptr;
+	QLineEdit *_edtLEDBaseFreq = nullptr;
+	QLineEdit *_edtLEDFrontRelative = nullptr;
+	QLineEdit *_edtLEDBackRelative = nullptr;
 
 	QComboBox *_cmbUserFunction = nullptr;
 

@@ -100,7 +100,7 @@ struct freq_base_t : Command
 	{
 		std::stringstream ss;
 		ss << "!P" << P << "=" << std::to_string(_base_freq) << "\n";
-		ss << "!P" << P << std::to_string(_id) << "=" << std::to_string(_absolute_freq) << "\n";
+		ss << "!P" << P << "0=" << std::to_string(_absolute_freq) << "\n";
 		return ss.str();
 	}
 
@@ -124,7 +124,6 @@ struct freq_base_t : Command
 	float relativeFrequency() const { return _relative_freq; }
 
 protected:
-	unsigned _id;
 	float _relative_freq;
 	unsigned _base_freq;
 	unsigned _absolute_freq;
@@ -137,7 +136,7 @@ protected:
 struct LaserPointer : freq_base_t<'A'>
 {
 	LaserPointer(unsigned base_freq = 0u, float relative_freq = 0.0f)
-	{ _id = 0; setFrequency(base_freq, relative_freq); }
+	{ setFrequency(base_freq, relative_freq); }
 };
 
 
@@ -147,7 +146,7 @@ struct LaserPointer : freq_base_t<'A'>
 struct Buzzer : freq_base_t<'B'>
 {
 	Buzzer(unsigned base_freq = 0u, float relative_freq = 0.0f)
-	{ _id = 0; setFrequency(base_freq, relative_freq); }
+	{ setFrequency(base_freq, relative_freq); }
 };
 
 
@@ -156,20 +155,57 @@ struct Buzzer : freq_base_t<'B'>
  *
  * All frequencies are expressed in Hz.
  */
-struct LED : freq_base_t<'C'>
+struct LED : Command // not derived from freq_base_t to account for the two LEDs simultaneously
 {
-	typedef enum {
-		Back = 0,
-		Front = 1,
-	} led_identifier_t;
-
 	/*
 	 * construct a new LED command. The LED will have a relative frequency
 	 * w.r.t. the base frequency supplied as arguments. express base_freq in
 	 * terms of Hz, and up to 1Mhz (pass in 1000000 as argument)
 	 */
-	LED(led_identifier_t id, unsigned base_freq = 0u, float relative_freq = 0.0f)
-	{ _id= id; setFrequency(base_freq, relative_freq); }
+	LED(unsigned base_freq = 0u, float relative_freq_front = 0.0f, float relative_freq_back = 0.0f)
+	{ setFrequency(base_freq, relative_freq_front, relative_freq_back); }
+
+	const std::string toString() const override
+	{
+		std::stringstream ss;
+		ss << "!PC=" << std::to_string(_base_freq) << "\n";
+		ss << "!PC0=" << std::to_string(_absolute_freq_back) << "\n";
+		ss << "!PC1=" << std::to_string(_absolute_freq_front) << "\n";
+		return ss.str();
+	}
+
+	void setFrequency(unsigned base_freq, float relative_freq_front, float relative_freq_back)
+	{
+		if (base_freq == 0u) {
+			_relative_freq_front = 0.0f;
+			_relative_freq_back = 0.0f;
+			_base_freq = 0u;
+			_absolute_freq_front = 0u;
+			_absolute_freq_back = 0u;
+		}
+		else {
+			// turn relative into absolute
+			_relative_freq_front = std::abs(relative_freq_front);
+			_relative_freq_back  = std::abs(relative_freq_back);
+			_base_freq = 1000000u / base_freq;
+			_absolute_freq_front = std::floor(static_cast<float>(_base_freq) * _relative_freq_front);
+			_absolute_freq_back  = std::floor(static_cast<float>(_base_freq) * _relative_freq_back);
+		}
+	}
+
+	unsigned baseFrequency() const { return _base_freq / 1000000u; }
+	unsigned absoluteFrequencyFront() const { return _absolute_freq_front / 1000000u; }
+	unsigned absoluteFrequencyBack() const { return _absolute_freq_back / 1000000u; }
+	float relativeFrequencyFront() const { return _relative_freq_front; }
+	float relativeFrequencyBack() const { return _relative_freq_back; }
+
+protected:
+	float _relative_freq_front;
+	float _relative_freq_back;
+	unsigned _base_freq;
+	unsigned _absolute_freq_front;
+	unsigned _absolute_freq_back;
+
 };
 
 

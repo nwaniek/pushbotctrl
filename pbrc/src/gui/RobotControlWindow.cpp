@@ -79,7 +79,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	_cbShowEvents = new QCheckBox("visualize DVS events", _centralWidget);
 	_cbShowEvents->setCheckState(Qt::Checked);
 	layout->addWidget(_cbShowEvents, row, 0, 1, 3);
-	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onShowEventsStateChanged);
+	connect(_cbShowEvents, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbShowEventsStateChanged);
 
 	++row; {
 	auto line = new QFrame(_centralWidget);
@@ -102,11 +102,11 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	// laser pointer
 	int frame_row = 0;
-	auto _cbLaserPointer = new QCheckBox("Laser Pointer", _frameFreq);
+	_cbLaserPointer = new QCheckBox("Laser Pointer", _frameFreq);
 	_cbLaserPointer->setCheckState(Qt::Unchecked);
 	_layoutFreq->addWidget(_cbLaserPointer, frame_row, 0);
 
-	auto _edtLPBaseFreq = new QLineEdit("1", _frameFreq);
+	_edtLPBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtLPBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtLPBaseFreq, frame_row, 1);
 	_edtLPBaseFreq->setEnabled(false);
@@ -114,7 +114,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _lblLPBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblLPBaseFreq, frame_row, 2);
 
-	auto _edtLPRelative = new QLineEdit("50", _frameFreq);
+	_edtLPRelative = new QLineEdit("50", _frameFreq);
 	_edtLPRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLPRelative, frame_row, 3);
 	_edtLPRelative->setEnabled(false);
@@ -125,11 +125,11 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	++frame_row;
 
 	// Buzzer
-	auto _cbBuzzer = new QCheckBox("Buzzer", _frameFreq);
+	_cbBuzzer = new QCheckBox("Buzzer", _frameFreq);
 	_cbBuzzer->setCheckState(Qt::Unchecked);
 	_layoutFreq->addWidget(_cbBuzzer, frame_row, 0);
 
-	auto _edtBuzzerBaseFreq = new QLineEdit("1", _frameFreq);
+	_edtBuzzerBaseFreq = new QLineEdit("1", _frameFreq);
 	_edtBuzzerBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
 	_layoutFreq->addWidget(_edtBuzzerBaseFreq, frame_row, 1);
 	_edtBuzzerBaseFreq->setEnabled(false);
@@ -137,7 +137,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	auto _lblBuzzerBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblBuzzerBaseFreq, frame_row, 2);
 
-	auto _edtBuzzerRelative = new QLineEdit("50", _frameFreq);
+	_edtBuzzerRelative = new QLineEdit("50", _frameFreq);
 	_edtBuzzerRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtBuzzerRelative, frame_row, 3);
 	_edtBuzzerRelative->setEnabled(false);
@@ -148,50 +148,50 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	++frame_row;
 
 	// LED Front
-	auto _cbLEDFront = new QCheckBox("Front LED", _frameFreq);
-	_cbLEDFront->setCheckState(Qt::Unchecked);
-	_layoutFreq->addWidget(_cbLEDFront, frame_row, 0);
+	_cbLEDs = new QCheckBox("LEDs", _frameFreq);
+	_cbLEDs->setCheckState(Qt::Unchecked);
+	_layoutFreq->addWidget(_cbLEDs, frame_row, 0);
 
-	auto _edtLEDFrontBaseFreq = new QLineEdit("1", _frameFreq);
-	_edtLEDFrontBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
-	_layoutFreq->addWidget(_edtLEDFrontBaseFreq, frame_row, 1);
-	_edtLEDFrontBaseFreq->setEnabled(false);
+	_edtLEDBaseFreq = new QLineEdit("1", _frameFreq);
+	_edtLEDBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
+	_layoutFreq->addWidget(_edtLEDBaseFreq, frame_row, 1);
+	_edtLEDBaseFreq->setEnabled(false);
 
 	auto _lblLEDFrontBaseFreq = new QLabel("Hz");
 	_layoutFreq->addWidget(_lblLEDFrontBaseFreq, frame_row, 2);
 
-	auto _edtLEDFrontRelative = new QLineEdit("50", _frameFreq);
+	_edtLEDFrontRelative = new QLineEdit("50", _frameFreq);
 	_edtLEDFrontRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLEDFrontRelative, frame_row, 3);
 	_edtLEDFrontRelative->setEnabled(false);
 
-	auto _lblLEDFrontRelative = new QLabel("%");
+	auto _lblLEDFrontRelative = new QLabel("% Front");
 	_layoutFreq->addWidget(_lblLEDFrontRelative, frame_row, 4);
 
 	++frame_row;
 
 	// LED Back
-	auto _cbLEDBack = new QCheckBox("Back LED", _frameFreq);
-	_cbLEDBack->setCheckState(Qt::Unchecked);
-	_layoutFreq->addWidget(_cbLEDBack, frame_row, 0);
-
-	auto _edtLEDBackBaseFreq = new QLineEdit("1", _frameFreq);
-	_edtLEDBackBaseFreq->setValidator(new QIntValidator(0, 1000000, this));
-	_layoutFreq->addWidget(_edtLEDBackBaseFreq, frame_row, 1);
-	_edtLEDBackBaseFreq->setEnabled(false);
-
-	auto _lblLEDBackBaseFreq = new QLabel("Hz");
-	_layoutFreq->addWidget(_lblLEDBackBaseFreq, frame_row, 2);
-
-	auto _edtLEDBackRelative = new QLineEdit("50", _frameFreq);
+	_edtLEDBackRelative = new QLineEdit("50", _frameFreq);
 	_edtLEDBackRelative->setValidator(new QIntValidator(0, 100, this));
 	_layoutFreq->addWidget(_edtLEDBackRelative, frame_row, 3);
 	_edtLEDBackRelative->setEnabled(false);
 
-	auto _lblLEDBackRelative = new QLabel("%");
+	auto _lblLEDBackRelative = new QLabel("% Back");
 	_layoutFreq->addWidget(_lblLEDBackRelative, frame_row, 4);
 
 
+	// connect all events
+	connect(_cbLaserPointer, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbLaserPointerStateChanged);
+	connect(_cbBuzzer, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbBuzzerStateChanged);
+	connect(_cbLEDs, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbLEDsStateChanged);
+
+	connect(_edtLPBaseFreq, &QLineEdit::textChanged, this, &RobotControlWindow::laserpointerSettingsChanged);
+	connect(_edtLPRelative, &QLineEdit::textChanged, this, &RobotControlWindow::laserpointerSettingsChanged);
+	connect(_edtBuzzerBaseFreq, &QLineEdit::textChanged, this, &RobotControlWindow::buzzerSettingsChanged);
+	connect(_edtBuzzerRelative, &QLineEdit::textChanged, this, &RobotControlWindow::buzzerSettingsChanged);
+	connect(_edtLEDBaseFreq, &QLineEdit::textChanged, this, &RobotControlWindow::ledSettingsChanged);
+	connect(_edtLEDFrontRelative, &QLineEdit::textChanged, this, &RobotControlWindow::ledSettingsChanged);
+	connect(_edtLEDBackRelative, &QLineEdit::textChanged, this, &RobotControlWindow::ledSettingsChanged);
 
 	layout->addWidget(_frameFreq, row, 0, 1, 3);
 
@@ -343,6 +343,11 @@ onControlConnected()
 	if (_cbShowEvents->checkState() == Qt::Checked)
 		openEventVisualizerWindow();
 
+	// check for any specific options
+	laserpointerSettingsChanged();
+	buzzerSettingsChanged();
+	ledSettingsChanged();
+
 	// set a user function
 	if (_cbUserFunction->checkState() == Qt::Checked) {
 		int index = _cmbUserFunction->currentIndex();
@@ -375,7 +380,7 @@ onControlDisconnected()
 
 
 void RobotControlWindow::
-onShowEventsStateChanged(int state)
+onCbShowEventsStateChanged(int state)
 {
 	if (!_control->isConnected()) return;
 
@@ -465,6 +470,8 @@ unsetUserFunction()
 void RobotControlWindow::
 onCbManualControlStateChanged(int state)
 {
+	if (!_control->isConnected()) return;
+
 	if (state == Qt::Checked)
 		openNavigationWindow();
 	else
@@ -476,6 +483,93 @@ onNavigationClosing()
 {
 	_winNavigation = nullptr;
 	_cbManualControl->setCheckState(Qt::Unchecked);
+}
+
+void RobotControlWindow::
+onCbLaserPointerStateChanged(int state)
+{
+	// GUI
+	_edtLPBaseFreq->setEnabled(state == Qt::Checked);
+	_edtLPRelative->setEnabled(state == Qt::Checked);
+
+	// control
+	laserpointerSettingsChanged();
+}
+
+
+void RobotControlWindow::
+onCbBuzzerStateChanged(int state)
+{
+	// GUI
+	_edtBuzzerBaseFreq->setEnabled(state == Qt::Checked);
+	_edtBuzzerRelative->setEnabled(state == Qt::Checked);
+
+	// control
+	buzzerSettingsChanged();
+}
+
+
+void RobotControlWindow::
+onCbLEDsStateChanged(int state)
+{
+	// GUI
+	_edtLEDBaseFreq->setEnabled(state == Qt::Checked);
+	_edtLEDFrontRelative->setEnabled(state == Qt::Checked);
+	_edtLEDBackRelative->setEnabled(state == Qt::Checked);
+
+	// Control
+	ledSettingsChanged();
+}
+
+
+void RobotControlWindow::
+laserpointerSettingsChanged()
+{
+	if (!_control->isConnected()) return;
+	if (_cbLaserPointer->checkState() == Qt::Checked) {
+		int freq  = _edtLPBaseFreq->text().isEmpty() ? 0 : _edtLPBaseFreq->text().toInt();
+		float rel = freq == 0 ? 0.0f :
+			(_edtLPRelative->text().isEmpty() ? 0.0f : _edtLPRelative->text().toFloat() / 100.0f);
+
+		_control->enableLaserPointer(freq, rel);
+	}
+	else
+		_control->disableLaserPointer();
+}
+
+
+void RobotControlWindow::
+buzzerSettingsChanged()
+{
+	if (!_control->isConnected()) return;
+	if (_cbBuzzer->checkState() == Qt::Checked) {
+		int freq  = _edtBuzzerBaseFreq->text().isEmpty() ? 0 : _edtBuzzerBaseFreq->text().toInt();
+		float rel = freq == 0 ? 0.0f :
+			(_edtBuzzerRelative->text().isEmpty() ? 0.0f : _edtBuzzerRelative->text().toFloat() / 100.0f);
+
+		_control->enableBuzzer(freq, rel);
+	}
+	else
+		_control->disableBuzzer();
+}
+
+
+void RobotControlWindow::
+ledSettingsChanged()
+{
+	if (!_control->isConnected()) return;
+	if (_cbLEDs->checkState() == Qt::Checked) {
+		int freq  = _edtLEDBaseFreq->text().isEmpty() ? 0 : _edtLEDBaseFreq->text().toInt();
+		float rel_front = freq == 0 ? 0.0f :
+			(_edtLEDFrontRelative->text().isEmpty() ? 0.0f : _edtLEDFrontRelative->text().toFloat() / 100.0f);
+		float rel_back = freq == 0 ? 0.0f :
+			(_edtLEDBackRelative->text().isEmpty() ? 0.0f : _edtLEDBackRelative->text().toFloat() / 100.0f);
+
+
+		_control->enableLEDs(freq, rel_front, rel_back);
+	}
+	else
+		_control->disableLEDs();
 }
 
 
