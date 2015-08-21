@@ -65,6 +65,7 @@ private:
 	bool _enabled = true;
 };
 
+
 /**
  * IMU - Enable or disable imu data streaming from on-board sensors
  */
@@ -86,6 +87,124 @@ struct IMU : Command
 private:
 	bool _enabled = true;
 };
+
+
+/*
+ * base class for everything that operates on frequencies, like buzzer, laser
+ * pointer, or LEDS
+ */
+template <const char P>
+struct freq_base_t : Command
+{
+	const std::string toString() const override
+	{
+		std::stringstream ss;
+		ss << "!P" << P << "=" << std::to_string(_base_freq) << "\n";
+		ss << "!P" << P << std::to_string(_id) << "=" << std::to_string(_absolute_freq) << "\n";
+		return ss.str();
+	}
+
+	void setFrequency(unsigned base_freq, float relative_freq)
+	{
+		if (base_freq == 0u) {
+			_relative_freq = 0.0;
+			_base_freq = 0u;
+			_absolute_freq = 0u;
+		}
+		else {
+			// turn relative into absolute
+			_relative_freq = std::abs(relative_freq);
+			_base_freq = 1000000u / base_freq;
+			_absolute_freq = std::floor(static_cast<float>(_base_freq) * _relative_freq);
+		}
+	}
+
+	unsigned baseFrequency() const { return _base_freq / 1000000u; }
+	unsigned absoluteFrequency() const { return _absolute_freq / 1000000u; }
+	float relativeFrequency() const { return _relative_freq; }
+
+protected:
+	unsigned _id;
+	float _relative_freq;
+	unsigned _base_freq;
+	unsigned _absolute_freq;
+};
+
+
+/*
+ * Laser Pointer
+ */
+struct LaserPointer : freq_base_t<'A'>
+{
+	LaserPointer(unsigned base_freq = 0u, float relative_freq = 0.0f)
+	{ _id = 0; setFrequency(base_freq, relative_freq); }
+};
+
+
+/*
+ * Buzzer
+ */
+struct Buzzer : freq_base_t<'B'>
+{
+	Buzzer(unsigned base_freq = 0u, float relative_freq = 0.0f)
+	{ _id = 0; setFrequency(base_freq, relative_freq); }
+};
+
+
+/*
+ * LED - command to enable/disable the LEDs on top of the PushBot.
+ *
+ * All frequencies are expressed in Hz.
+ */
+struct LED : freq_base_t<'C'>
+{
+	typedef enum {
+		Back = 0,
+		Front = 1,
+	} led_identifier_t;
+
+	/*
+	 * construct a new LED command. The LED will have a relative frequency
+	 * w.r.t. the base frequency supplied as arguments. express base_freq in
+	 * terms of Hz, and up to 1Mhz (pass in 1000000 as argument)
+	 */
+	LED(led_identifier_t id, unsigned base_freq = 0u, float relative_freq = 0.0f)
+	{ _id= id; setFrequency(base_freq, relative_freq); }
+};
+
+
+/*
+ * BoardLED - command to enable or disable the LED which is on the DVS Board
+ */
+struct BoardLED : Command
+{
+	typedef enum {
+		LED_MODE_ON,
+		LED_MODE_OFF,
+		LED_MODE_BLINKING
+	} boardled_mode_t;
+
+	BoardLED(boardled_mode_t mode = LED_MODE_OFF) : _mode(mode) {}
+
+	const std::string toString() const override
+	{
+		switch (_mode) {
+		case LED_MODE_OFF:
+			return std::string("!L0\n");
+		case LED_MODE_ON:
+			return std::string("!L1\n");
+		case LED_MODE_BLINKING:
+			return std::string("!L2\n");
+		}
+	}
+
+	boardled_mode_t mode() { return _mode; }
+	void set_mode(boardled_mode_t mode) { _mode = mode; }
+
+private:
+	boardled_mode_t _mode;
+};
+
 
 /**
  * mdw_base_t - Base class for all motor duty width / velocity commands

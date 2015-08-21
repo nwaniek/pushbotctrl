@@ -52,6 +52,11 @@ public:
 	bool isConnected();
 
 	/*
+	 * reset a robot to its initial state
+	 */
+	void resetRobot();
+
+	/*
 	 * set a user function which will be called everytime an event is
 	 * received.
 	 */

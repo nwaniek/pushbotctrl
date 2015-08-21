@@ -76,24 +76,39 @@ sendCommand(const commands::Command *cmd)
 
 
 void RobotControl::
-onPushbotConnected()
+resetRobot()
 {
-	// initiate the robot.
-	_is_connected = true;
-
 	// always send an empty command first. This will push the PushBot's
 	// state machine to a state that new commands
 	_con->sendCommand(new commands::Empty);
 
-	// enable event streaming and motor control
+	// enable event streaming, sensor streaming, and motor control
 	_con->sendCommand(new commands::DVS(true));
 	_con->sendCommand(new commands::MotorDriver(true));
+	_con->sendCommand(new commands::IMU(true));
+
 	// reset motor velocities to 0
 	_con->sendCommand(new commands::MV0(0));
 	_con->sendCommand(new commands::MV1(0));
-	// enable sensory data stream for gyro, acc, mag
-	_con->sendCommand(new commands::IMU(true));
 
+	// disable top LEDs
+	_con->sendCommand(new commands::LED(commands::LED::Front));
+	_con->sendCommand(new commands::LED(commands::LED::Back));
+
+	// disable buzzer
+	_con->sendCommand(new commands::Buzzer());
+
+	// disable laser pointer
+	_con->sendCommand(new commands::LaserPointer());
+
+}
+
+void RobotControl::
+onPushbotConnected()
+{
+	// initiate the robot.
+	_is_connected = true;
+	resetRobot();
 	emit connected();
 }
 
@@ -137,8 +152,8 @@ connectRobot(const QString IP, uint16_t port)
 void RobotControl::
 disconnectRobot()
 {
-	_con->sendCommand(new commands::MV0(0));
-	_con->sendCommand(new commands::MV1(0));
+	// turn off everything
+	resetRobot();
 	_con->flush();
 	_con->disconnect();
 }

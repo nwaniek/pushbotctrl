@@ -6,8 +6,9 @@
 #include <deque>
 #include <iostream>
 
+
 /**
- * get the length of an array
+ * get the length of a standard C array
  */
 #define LENGTH(X) (sizeof X / sizeof X[0])
 
