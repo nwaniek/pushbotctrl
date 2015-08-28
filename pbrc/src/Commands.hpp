@@ -231,6 +231,8 @@ struct BoardLED : Command
 			return std::string("!L1\n");
 		case LED_MODE_BLINKING:
 			return std::string("!L2\n");
+		default:
+			return std::string("");
 		}
 	}
 
