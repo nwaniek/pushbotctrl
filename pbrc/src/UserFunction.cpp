@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstddef>
 #include "UserFunction.hpp"
 #include "RobotControl.hpp"
 
@@ -63,4 +64,38 @@ demo_function_2(RobotControl * const control,
 	// voting system to drive left/right --> Braitenberg Vehicle
 	if (!sensor_ev && !dvs_ev)
 		control->drive(0.0, 0.2);
+}
+
+
+/*
+ *
+ * reconstructing the LED tracking mechanism for the robot chain
+ *
+ */
+
+#define DVS_SIZE 128
+static uint16_t lastLocalTimeStampLow[DVS_SIZE][DVS_SIZE];
+static uint8_t lastLocalTimeStampHigh[DVS_SIZE][DVS_SIZE];
+
+
+void
+init_tracking()
+{
+
+}
+
+
+void
+led_tracker(RobotControl * const control,
+	    shared_ptr<DVSEvent> dvs_ev,
+	    shared_ptr<SensorEvent> sensor_ev)
+{
+	static int i = 0;
+	++i %= 1000;
+	if (!i && dvs_ev) {
+		cout << "triggered by DVS event at ("
+			<< dvs_ev->x << ", "
+			<< dvs_ev->y << ")"
+			<< std::endl;
+	}
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QApplication>
+#include <cstdint>
 #include "gui/MainWindow.hpp"
 #include "Commands.hpp"
 #include "utils.hpp"
@@ -11,6 +12,7 @@ main (int argc, char *argv[])
 
 	// register the command infrastructure. As we pass along only pointers,
 	// use the base class here.
+	qRegisterMetaType<uint16_t>("uint16_t");
 	qRegisterMetaType<commands::Command*>("commands::Command*");
 	qRegisterMetaType<const commands::Command*>("const commands::Command*");
 
