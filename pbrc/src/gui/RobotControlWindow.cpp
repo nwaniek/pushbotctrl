@@ -61,7 +61,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	// manual control
 	_cbManualControl = new QCheckBox("manual control", _centralWidget);
 	layout->addWidget(_cbManualControl, row, 0, 1, 3);
-	_cbManualControl->setCheckState(Qt::Checked);
+	// _cbManualControl->setCheckState(Qt::Checked);
 	connect(_cbManualControl, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbManualControlStateChanged);
 
 	/*

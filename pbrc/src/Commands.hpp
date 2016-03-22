@@ -54,7 +54,7 @@ struct DVS : Command
 	const std::string toString() const override
 	{
 		if (this->_enabled)
-			return std::string("E+\n");
+			return std::string("E+\n!E3\n");
 		else
 			return std::string("E-\n");
 	}

@@ -33,9 +33,9 @@ void led_tracker(
  * need to be of the form {"descriptive name", function_name}.
  */
 static const UserFunction user_functions[] = {
+	{"LED Tracker", led_tracker},
 	{"First demo function",  demo_function_1},
 	{"Second demo function", demo_function_2},
-	{"LED Tracker", led_tracker},
 };
 
 
