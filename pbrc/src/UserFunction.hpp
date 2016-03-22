@@ -22,6 +22,12 @@ void demo_function_2(
 		shared_ptr<DVSEvent> dvs_ev,
 		shared_ptr<SensorEvent> sensor_ev);
 
+void led_tracker(
+		RobotControl * const control,
+		shared_ptr<DVSEvent> dvs_ev,
+		shared_ptr<SensorEvent> sensor_ev);
+
+
 /*
  * Add all the functions that you want to use to this list. Entries in this list
  * need to be of the form {"descriptive name", function_name}.
@@ -29,6 +35,7 @@ void demo_function_2(
 static const UserFunction user_functions[] = {
 	{"First demo function",  demo_function_1},
 	{"Second demo function", demo_function_2},
+	{"LED Tracker", led_tracker},
 };
 
 

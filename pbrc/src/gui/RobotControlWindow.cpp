@@ -48,8 +48,9 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	int row = 0;
 
 	// connectivity
-	_edtIP = new QLineEdit("10.162.242.xxx", _centralWidget);
-	layout->addWidget(_edtIP, row, 1);
+	// _edtURI = new QLineEdit("10.162.242.xxx", _centralWidget);
+	_edtURI = new QLineEdit("/dev/ttyUSB0?baudrate=12000000", _centralWidget);
+	layout->addWidget(_edtURI, row, 1);
 
 	_btnConnect = new QPushButton("connect", _centralWidget);
 	layout->addWidget(_btnConnect, row, 2);
@@ -252,7 +253,7 @@ void RobotControlWindow::
 onBtnConnectClicked()
 {
 	if (!_control->isConnected())
-		_control->connectRobot(_edtIP->text());
+		_control->connectRobot(_edtURI->text());
 	else
 		_control->disconnectRobot();
 }
@@ -278,7 +279,7 @@ openEventVisualizerWindow()
 	}
 
 	_winEventVisualizer->move(xoffset, yoffset);
-	_winEventVisualizer->setWindowTitle("Events: " + _edtIP->text());
+	_winEventVisualizer->setWindowTitle("Events: " + _edtURI->text());
 
 	connect(_winEventVisualizer, &EventVisualizerWindow::closing, this, &RobotControlWindow::onEventVisualizerClosing);
 }
@@ -302,7 +303,7 @@ openNavigationWindow()
 	}
 
 	_winNavigation->move(xoffset, yoffset);
-	_winNavigation->setWindowTitle("Navigation " + _edtIP->text());
+	_winNavigation->setWindowTitle("Navigation " + _edtURI->text());
 
 	connect(_winNavigation, &NavigationWindow::closing, this, &RobotControlWindow::onNavigationClosing);
 }
@@ -327,8 +328,8 @@ void RobotControlWindow::
 onControlConnected()
 {
 	_btnConnect->setText("disconnect");
-	_edtIP->setReadOnly(true);
-	_edtIP->setEnabled(false);
+	_edtURI->setReadOnly(true);
+	_edtURI->setEnabled(false);
 
 	// set up an event visualizer
 	// TODO: check the checkbox if we really need to
@@ -378,8 +379,8 @@ onControlDisconnected()
 	closeNavigationWindow();
 	_cbManualControl->setCheckState(old);
 
-	_edtIP->setReadOnly(false);
-	_edtIP->setEnabled(true);
+	_edtURI->setReadOnly(false);
+	_edtURI->setEnabled(true);
 	_btnConnect->setText("connect");
 }
 

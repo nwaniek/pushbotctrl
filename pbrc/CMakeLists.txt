@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(pbrc)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 set(CMAKE_BUILD_TYPE RELEASE)
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
@@ -47,6 +47,7 @@ set(HEADERS
 include_directories(src)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
+find_package(Qt5SerialPort REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SRC} ${HEADERS_MOC} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Network m)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Network Qt5::SerialPort m)

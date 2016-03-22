@@ -8,6 +8,7 @@
 #include <QTcpSocket>
 #include <QMetaObject>
 #include <QString>
+#include <QSerialPort>
 
 namespace nst {
 
@@ -15,6 +16,16 @@ namespace nst {
 namespace commands {
 	struct Command;
 } // commands::
+
+
+/*
+ * Pushbots are a DVS hosted on a robot platform.
+ */
+typedef enum {
+	DVS_NETWORK_DEVICE, // network socket connection
+	DVS_SERIAL_DEVICE, // serial port connection
+	DVS_UNKNOWN_DEVICE
+} CONNECTION_TYPE;
 
 
 class PushbotConnection : public QObject
@@ -31,7 +42,7 @@ signals:
 	void disconnected();
 
 public slots:
-	void connect(const QString ip, uint16_t port = 56000);
+	void connect(const QString uri, uint16_t port = 56000);
 	void disconnect();
 
 	/**
@@ -47,8 +58,12 @@ private slots:
 	void _sock_disconnected();
 	void _sock_onStateChanged(QAbstractSocket::SocketState state);
 
+	void _serial_error(QSerialPort::SerialPortError error);
+
 private:
 	QTcpSocket *_sock = nullptr;
+	QSerialPort *_serial = nullptr;
+	CONNECTION_TYPE _ctype = DVS_UNKNOWN_DEVICE;
 };
 
 

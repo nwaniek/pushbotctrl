@@ -74,7 +74,7 @@ private:
 	RobotControl *_control;
 
 	QFrame *_centralWidget = nullptr;
-	QLineEdit *_edtIP = nullptr;
+	QLineEdit *_edtURI = nullptr;
 	QPushButton *_btnConnect = nullptr;
 
 	QCheckBox *_cbManualControl = nullptr;

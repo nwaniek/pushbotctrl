@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <QTcpSocket>
+#include <QSerialPort>
 
 namespace nst {
 namespace commands {
@@ -346,6 +347,15 @@ QTcpSocket* operator<< (QTcpSocket* sock, const nst::commands::Command &cmd)
 {
 	sock->write(cmd.toString().c_str());
 	return sock;
+}
+
+// inline
+// QSo
+inline
+QSerialPort* operator<< (QSerialPort* serial, const nst::commands::Command &cmd)
+{
+	serial->write(cmd.toString().c_str());
+	return serial;
 }
 
 
