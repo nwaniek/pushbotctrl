@@ -43,7 +43,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	layout()->addWidget(_centralWidget);
 
 	QGridLayout *layout = new QGridLayout();
-	layout->addWidget(new QLabel("IP: ", _centralWidget));
+	layout->addWidget(new QLabel("URI: ", _centralWidget));
 
 	int row = 0;
 

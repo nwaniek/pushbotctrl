@@ -44,7 +44,7 @@ connect(const QString uri, uint16_t port)
 		QObject::connect(_sock, &QTcpSocket::connected, this, &PushbotConnection::_sock_connected);
 		QObject::connect(_sock, &QTcpSocket::disconnected, this, &PushbotConnection::_sock_disconnected);
 		QObject::connect(_sock, &QTcpSocket::stateChanged, this, &PushbotConnection::_sock_onStateChanged);
-		QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::_sock_readyRead);
+		QObject::connect(_sock, &QTcpSocket::readyRead, this, &PushbotConnection::_conn_readyRead);
 		this->_sock->connectToHost(uri, port);
 		break;
 
@@ -56,7 +56,7 @@ connect(const QString uri, uint16_t port)
 		this->_serial->setPortName(portname);
 		this->_serial->setBaudRate(baudrate);
 
-		QObject::connect(_serial, &QSerialPort::readyRead, this, &PushbotConnection::_sock_readyRead);
+		QObject::connect(_serial, &QSerialPort::readyRead, this, &PushbotConnection::_conn_readyRead);
 		QObject::connect(_serial, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error), this, &PushbotConnection::_serial_error);
 		if (this->_serial->open(QIODevice::ReadWrite))
 			emit connected();
@@ -131,7 +131,7 @@ disconnect()
 
 
 void PushbotConnection::
-_sock_readyRead()
+_conn_readyRead()
 {
 	switch (_ctype) {
 	case DVS_NETWORK_DEVICE:
@@ -140,12 +140,14 @@ _sock_readyRead()
 			emit dataReady(std::move(data));
 		}
 		break;
+
 	case DVS_SERIAL_DEVICE:
 		if (_serial) {
 			auto data = _serial->readAll();
 			emit dataReady(std::move(data));
 		}
 		break;
+
 	case DVS_UNKNOWN_DEVICE:
 		break;
 	}
@@ -198,11 +200,13 @@ sendCommand(commands::Command *cmd)
 
 	switch (_ctype) {
 	case DVS_NETWORK_DEVICE:
-		_sock << *cmd;
+		if (_sock) _sock << *cmd;
 		break;
+
 	case DVS_SERIAL_DEVICE:
-		_serial << *cmd;
+		if (_serial) _serial << *cmd;
 		break;
+
 	case DVS_UNKNOWN_DEVICE:
 		break;
 	}

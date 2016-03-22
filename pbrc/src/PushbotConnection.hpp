@@ -53,7 +53,8 @@ public slots:
 	void flush();
 
 private slots:
-	void _sock_readyRead();
+	void _conn_readyRead();
+
 	void _sock_connected();
 	void _sock_disconnected();
 	void _sock_onStateChanged(QAbstractSocket::SocketState state);
