@@ -142,10 +142,11 @@ led_tracker(RobotControl * const control,
 		float y = float(dvs_ev->x);
 		if (x > 128.f || y > 128.f) std::cout << "WARNING" << std::endl;
 
-		auto DVSTimestamp = dvs_ev->t;
-		auto lastTimestamp = data->timestamps[dvs_ev->y][dvs_ev->x];
-		int32_t deltaT = DVSTimestamp - lastTimestamp;
-		int32_t timeDiff = (deltaT > LED_PERIOD) ? deltaT - LED_PERIOD : LED_PERIOD - deltaT;
+		uint64_t DVSTimestamp = dvs_ev->t;
+		uint64_t lastTimestamp = data->timestamps[dvs_ev->y][dvs_ev->x];
+		int64_t deltaT = DVSTimestamp - lastTimestamp;
+		// int64_t timeDiff = (deltaT > LED_PERIOD) ? deltaT - LED_PERIOD : LED_PERIOD - deltaT;
+		int64_t timeDiff = std::abs(LED_PERIOD - deltaT);
 
 		// only look at things that have a time-difference of 200 to our
 		// LED window
