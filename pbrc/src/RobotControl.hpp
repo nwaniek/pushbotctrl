@@ -27,8 +27,7 @@ namespace commands {
 
 /**
  * RobotControl - Main class to operate the robot.
- *
- * Internally this class manages everything that runs in the background to
+ * * Internally this class manages everything that runs in the background to
  * operate a robot. It will spawn threads for the data processing and socket
  * connections and forward the events to the user (or GUI).
  *
@@ -105,6 +104,19 @@ public:
 	 */
 	uint8_t id() const;
 
+	/**
+	 * Store and retrieve user data (e.g. state variables) in the robot
+	 * control. This will be required if you want to re-use one
+	 * user-function for multiple robots.  In addition, a function needs to
+	 * be passed that will be called when the RobotControl gets destroyed,
+	 * or the user-data is set again
+	 *
+	 * TODO: check thread safety
+	 */
+	void setUserData(void *data, void (*cleanup_fn)(void *data));
+	void* getUserData();
+	void resetUserData();
+
 signals:
 	void connected();
 	void disconnected();
@@ -136,6 +148,10 @@ private:
 
 	// each robot control gets its own ID
 	uint8_t _id;
+
+	// user data associated with this RobotControl
+	void *_user_data = nullptr;
+	void (*_user_cleanup_fn)(void *data) = nullptr;
 };
 
 

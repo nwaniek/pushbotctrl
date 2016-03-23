@@ -238,6 +238,8 @@ RobotControlWindow::
 	// flag set so will tidy up themselves
 	if (_winNavigation) closeNavigationWindow();
 	if (_winEventVisualizer) closeEventVisualizerWindow();
+
+	// TODO: cleanup _control
 }
 
 

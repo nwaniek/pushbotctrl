@@ -81,31 +81,70 @@ const float yVTable[] = {-60,-5.999936e+01,-5.999825e+01,-5.999627e+01,-5.999274
 // }}}
 
 
+
 #define LED_PERIOD 1000
 #define DVS_SIZE 128
-static uint64_t lastTimestamps[DVS_SIZE][DVS_SIZE] = {{0}};
 
-struct point_t {
+/*
+ * a point in 2 dimensions
+ */
+struct Vec2ui {
 	uint16_t x, y;
 };
-static point_t curTrackedPoint{64, 40};
+
+/*
+ * user data that will be used for LED tracking
+ */
+struct led_tracking_data {
+	uint64_t timestamps[DVS_SIZE][DVS_SIZE] = {{0}};
+	Vec2ui tracker{64, 40};
+	uint32_t i;
+};
+
+
+/*
+ * delete an allocated data member from the robot control
+ */
+void cleanup_led_tracking(void *raw_data)
+{
+	if (raw_data == nullptr) return;
+	auto data = static_cast<led_tracking_data*>(raw_data);
+	delete data;
+}
+
+
+void* init_led_tracking(RobotControl * const control)
+{
+	led_tracking_data *data = new led_tracking_data;
+	control->setUserData(data, cleanup_led_tracking);
+	return static_cast<void*>(data);
+}
+
+
 
 void
 led_tracker(RobotControl * const control,
 	    shared_ptr<DVSEvent> dvs_ev,
 	    shared_ptr<SensorEvent> sensor_ev)
 {
-	static int i = 0;
+	// set up the data struct if necessary
+	void *raw_data = control->getUserData();
+	if (raw_data == nullptr) raw_data = init_led_tracking(control);
+	led_tracking_data *data = static_cast<led_tracking_data*>(raw_data);
+
+	// track how often the function got called for this robot
+	data->i = (data->i + 1) % 1000;
+
 	const float tao = 0.9f;
 
 	// only watch off polarity
 	if (dvs_ev && (dvs_ev->p == 0)) {
-		// XXX data is flipped here? wtf?
+		// XXX data is flipped here? why?
 		uint16_t x = dvs_ev->y;
 		uint16_t y = dvs_ev->x;
 
 		auto DVSTimestamp = dvs_ev->t;
-		auto lastTimestamp = lastTimestamps[y][x];
+		auto lastTimestamp = data->timestamps[y][x];
 		auto deltaT = DVSTimestamp - lastTimestamp;
 		auto timeDiff = (deltaT > LED_PERIOD) ? deltaT - LED_PERIOD : LED_PERIOD - deltaT;
 
@@ -113,12 +152,12 @@ led_tracker(RobotControl * const control,
 			float weightT = TimeDevCurve[timeDiff];
 
 			uint16_t xDist = 0;
-			if (x > curTrackedPoint.x) xDist = x - curTrackedPoint.x;
-			else xDist = curTrackedPoint.x - x;
+			if (x > data->tracker.x) xDist = x - data->tracker.x;
+			else xDist = data->tracker.x - x;
 
 			uint16_t yDist = 0;
-			if (y > curTrackedPoint.y) yDist = y - curTrackedPoint.y;
-			else yDist = curTrackedPoint.y - y;
+			if (y > data->tracker.y) yDist = y - data->tracker.y;
+			else yDist = data->tracker.y - y;
 
 			float weightX = 0.f;
 			if (xDist < 127) weightX = DistanceDevCurve[xDist];
@@ -130,16 +169,12 @@ led_tracker(RobotControl * const control,
 			float wx = tao * weightX * weightT;
 			float wy = tao * weightY * weightT;
 
-			curTrackedPoint.x = (1.f - wx) * curTrackedPoint.x + wx * (float)x;
-			curTrackedPoint.y = (1.f - wy) * curTrackedPoint.y + wy * (float)y;
-
-			std::cout << curTrackedPoint.x << ", " << curTrackedPoint.y << std::endl;
-
-
+			data->tracker.x = (1.f - wx) * data->tracker.x + wx * (float)x;
+			data->tracker.y = (1.f - wy) * data->tracker.y + wy * (float)y;
 		}
-		lastTimestamps[y][x] = DVSTimestamp;
-
-
-		// pull the tracked LED point towards
+		data->timestamps[y][x] = DVSTimestamp;
 	}
+	// emit some information every 1000 calls
+	if (!(data->i))
+		std::cout << int(control->id()) << ": " << data->tracker.x << ", " << data->tracker.y << std::endl;
 }

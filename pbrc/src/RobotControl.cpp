@@ -60,6 +60,9 @@ RobotControl()
 RobotControl::
 ~RobotControl()
 {
+	// invoke cleanup of user data (if necessary)
+	resetUserData();
+
 	// shut down objects
 	_con->disconnect();
 
@@ -267,6 +270,7 @@ id() const
 void RobotControl::
 setUserFunction(const UserFunction *fn)
 {
+	resetUserData();
 	_userfn = fn;
 	_timer_uf->start();
 }
@@ -277,6 +281,7 @@ unsetUserFunction()
 {
 	_userfn = nullptr;
 	_timer_uf->stop();
+	resetUserData();
 }
 
 
@@ -292,6 +297,29 @@ void RobotControl::
 onTimerUFTimeout()
 {
 	if (_userfn) _userfn->fn(this, std::shared_ptr<DVSEvent>(), std::shared_ptr<SensorEvent>());
+}
+
+
+void RobotControl::
+setUserData(void *data, void (*cleanup_fn)(void *data))
+{
+	resetUserData();
+	this->_user_data = data;
+	this->_user_cleanup_fn = cleanup_fn;
+}
+
+void* RobotControl::
+getUserData()
+{
+	return _user_data;
+}
+
+void RobotControl::
+resetUserData()
+{
+	if (_user_cleanup_fn) _user_cleanup_fn(_user_data);
+	_user_data = nullptr;
+	_user_cleanup_fn = nullptr;
 }
 
 } // nst::
