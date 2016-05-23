@@ -1,6 +1,7 @@
 #ifndef __COMMANDS_HPP__DE8555E9_1B8E_47A6_BF34_8AE88A27C9BE
 #define __COMMANDS_HPP__DE8555E9_1B8E_47A6_BF34_8AE88A27C9BE
 
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <sstream>

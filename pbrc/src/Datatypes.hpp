@@ -1,6 +1,7 @@
 #ifndef __PBRCTYPES_HPP__FA25AD5E_D235_4C44_88AE_DCAF7423C619
 #define __PBRCTYPES_HPP__FA25AD5E_D235_4C44_88AE_DCAF7423C619
 
+#include <cmath>
 #include <ostream>
 #include <iostream>
 #include <cstdlib>
