@@ -104,6 +104,15 @@ public:
 	 */
 	uint8_t id() const;
 
+
+	/*
+	 * set a specific speed for the motors (needs to be in range [0., 1.])
+	 */
+	void setMotor0Speed(float m0speed);
+	void setMotor1Speed(float m1speed);
+	void setMotorSpeeds(float m0speed, float m1speed);
+
+
 	/**
 	 * Store and retrieve user data (e.g. state variables) in the robot
 	 * control. This will be required if you want to re-use one
@@ -117,6 +126,11 @@ public:
 	void* getUserData();
 	void resetUserData();
 
+	/**
+	 * let the user function send a processing request for some data
+	 */
+	void sendUserFunctionData(int type, void *data);
+
 signals:
 	void connected();
 	void disconnected();
@@ -124,6 +138,7 @@ signals:
 	void responseReceived(const QString *str);
 	void DVSEventReceived(std::shared_ptr<DVSEvent> ev);
 	void sensorEvent(std::shared_ptr<SensorEvent> ev);
+	void userFunctionData(uint8_t id, int type, void *data);
 
 private slots:
 	void onPushbotConnected();

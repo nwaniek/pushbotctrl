@@ -39,6 +39,12 @@ EventVisualizerWindow::
 
 
 void EventVisualizerWindow::
+setTrackingLine(int x, int y)
+{
+	_wdgtEvents->setTrackingLine(x, y);
+}
+
+void EventVisualizerWindow::
 resizeEvent(QResizeEvent *ev)
 {
 	// make sure to keep a fixed/square aspect when resizing

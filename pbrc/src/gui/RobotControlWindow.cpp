@@ -34,6 +34,7 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	_control = new RobotControl();
 	connect(_control, &RobotControl::connected, this, &RobotControlWindow::onControlConnected);
 	connect(_control, &RobotControl::disconnected, this, &RobotControlWindow::onControlDisconnected);
+	connect(_control, &RobotControl::userFunctionData, this, &RobotControlWindow::onControlUserFunctionData);
 
 	// window frame
 	this->setWindowTitle("Robot Control " + QString::number(_control->id()));
@@ -384,6 +385,17 @@ onControlDisconnected()
 	_edtURI->setReadOnly(false);
 	_edtURI->setEnabled(true);
 	_btnConnect->setText("connect");
+}
+
+
+void RobotControlWindow::
+onControlUserFunctionData(int, int type, void *data)
+{
+	if (type == UFDT_LED_TRACKING_INFO) {
+		led_tracking_info *info = static_cast<led_tracking_info*>(data);
+		if (_winEventVisualizer) _winEventVisualizer->setTrackingLine(info->x, info->y);
+		delete info;
+	}
 }
 
 

@@ -69,6 +69,8 @@ onNavigationUpdate(const QPointF pos)
 		_control->drive(pos.x(), pos.y());
 	else
 		_control->drive(SGNF(pos.x()) * pos.x() * pos.x(), SGNF(pos.y()) * pos.y() * pos.y());
+
+	// std::cout << pos.x() << ", " << pos.y() << std::endl;
 }
 
 

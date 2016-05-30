@@ -26,6 +26,8 @@ public:
 	explicit DVSEventWidget(QWidget *parent=nullptr);
 	~DVSEventWidget();
 
+	void setTrackingLine(int x, int y);
+
 public slots:
 	void paintEvent(QPaintEvent *event);
 	void decayImage();
@@ -36,6 +38,7 @@ private:
 	QTimer  _timer;
 	QImage *_image;
 	float   _decay_factor;
+	int _track_x, _track_y;
 
 	void decayPixel(unsigned *p);
 };

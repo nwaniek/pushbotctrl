@@ -1,4 +1,5 @@
 #include "RobotControl.hpp"
+
 #include "PushbotConnection.hpp"
 #include "SensorsProcessor.hpp"
 #include "BytestreamParser.hpp"
@@ -205,6 +206,31 @@ drive(float x, float y)
 
 
 void RobotControl::
+setMotor0Speed(float m0speed)
+{
+	_con->sendCommand(new commands::MVD0(static_cast<int>(floor(m0speed))));
+	_con->flush();
+}
+
+
+void RobotControl::
+setMotorSpeeds(float m0speed, float m1speed)
+{
+	_con->sendCommand(new commands::MVD0(static_cast<int>(floor(m0speed))));
+	_con->sendCommand(new commands::MVD1(static_cast<int>(floor(m1speed))));
+	_con->flush();
+}
+
+
+void RobotControl::
+setMotor1Speed(float m1speed)
+{
+	_con->sendCommand(new commands::MVD1(static_cast<int>(floor(m1speed))));
+	_con->flush();
+}
+
+
+void RobotControl::
 enableEventstream()
 {
 	if (!_is_connected) return;
@@ -321,5 +347,13 @@ resetUserData()
 	_user_data = nullptr;
 	_user_cleanup_fn = nullptr;
 }
+
+void RobotControl::
+sendUserFunctionData(int type, void *data)
+{
+	// TODO: check thread safety
+	emit userFunctionData(_id, type, data);
+}
+
 
 } // nst::

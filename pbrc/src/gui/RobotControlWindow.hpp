@@ -55,9 +55,9 @@ private slots:
 	void onNavigationClosing();
 
 	// control slots
-
 	void onControlConnected();
 	void onControlDisconnected();
+	void onControlUserFunctionData(int id, int type, void *data);
 
 private:
 	void openEventVisualizerWindow();

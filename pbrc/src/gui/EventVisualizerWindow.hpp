@@ -27,6 +27,7 @@ public:
 	~EventVisualizerWindow();
 
 	void resizeEvent(QResizeEvent *ev);
+	void setTrackingLine(int x, int y);
 
 public slots:
 	void closeEvent(QCloseEvent *ev) Q_DECL_OVERRIDE;

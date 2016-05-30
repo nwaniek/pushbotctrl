@@ -7,6 +7,18 @@
 using namespace std;
 using namespace nst;
 
+/*
+ * every struct defined here needs a corresponding enum entry in the user data
+ * type to uniquely identify the type.
+ */
+struct led_tracking_info {
+	unsigned x, y;
+};
+
+enum user_function_data_type {
+	UFDT_LED_TRACKING_INFO = 0
+};
+
 
 /*
  * TODO: DESCRIPTION. Each user function will be called at least every 15ms
@@ -22,7 +34,12 @@ void demo_function_2(
 		shared_ptr<DVSEvent> dvs_ev,
 		shared_ptr<SensorEvent> sensor_ev);
 
-void led_tracker(
+void led_tracker_plain(
+		RobotControl * const control,
+		shared_ptr<DVSEvent> dvs_ev,
+		shared_ptr<SensorEvent> sensor_ev);
+
+void led_tracker_drive(
 		RobotControl * const control,
 		shared_ptr<DVSEvent> dvs_ev,
 		shared_ptr<SensorEvent> sensor_ev);
@@ -33,7 +50,8 @@ void led_tracker(
  * need to be of the form {"descriptive name", function_name}.
  */
 static const UserFunction user_functions[] = {
-	{"LED Tracker", led_tracker},
+	{"LED Tracker - motor", led_tracker_plain},
+	{"LED Tracker + motor", led_tracker_drive},
 	{"First demo function",  demo_function_1},
 	{"Second demo function", demo_function_2},
 };
