@@ -25,7 +25,7 @@ public:
 	NavigationWindow(RobotControl * control, QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~NavigationWindow();
 
-	void resizeEvent(QResizeEvent *ev);
+	void resizeEvent(QResizeEvent *ev) Q_DECL_OVERRIDE;
 
 public slots:
 	void closeEvent(QCloseEvent *ev) Q_DECL_OVERRIDE;

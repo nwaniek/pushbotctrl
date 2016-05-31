@@ -26,7 +26,7 @@ public:
 	EventVisualizerWindow(RobotControl *control, QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~EventVisualizerWindow();
 
-	void resizeEvent(QResizeEvent *ev);
+	void resizeEvent(QResizeEvent *ev) Q_DECL_OVERRIDE;
 	void setTrackingLine(int x, int y);
 
 public slots:
