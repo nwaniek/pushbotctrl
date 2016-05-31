@@ -112,6 +112,11 @@ public:
 	void setMotor1Speed(float m1speed);
 	void setMotorSpeeds(float m0speed, float m1speed);
 
+	/*
+	 * send a plain command string
+	 */
+	void sendCommand(std::string str);
+
 
 	/**
 	 * Store and retrieve user data (e.g. state variables) in the robot
@@ -135,7 +140,7 @@ signals:
 	void connected();
 	void disconnected();
 
-	void responseReceived(const QString *str);
+	void responseReceived(std::shared_ptr<QString> str);
 	void DVSEventReceived(std::shared_ptr<DVSEvent> ev);
 	void sensorEvent(std::shared_ptr<SensorEvent> ev);
 	void userFunctionData(uint8_t id, int type, void *data);

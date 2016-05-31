@@ -32,7 +32,6 @@ parse(const unsigned char c)
 	// high bit. If it is set, it is an event
 	case 0:
 		if ((c & 0x80) == 0) {
-			_response->append(c);
 			if (c == '\n') {
 				if (!_response)
 					std::cerr << "EE: BytestreamParser _response is nullptr where it should not be" << std::endl;

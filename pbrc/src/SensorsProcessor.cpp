@@ -24,13 +24,47 @@ SensorsProcessor::
 }
 
 
-void SensorsProcessor::
+
+bool SensorsProcessor::
 parseString(const QString *str)
 {
+	// check if and which sensor we have (S10 - gyro, S11 - acc, S12 - mag)
+	auto s = str->left(3);
+	if (s != "-S1") return false;
+
+	// extract the type of data
+	QStringRef sensor_type_str(str, 3, 1);
+	auto sensor_type = sensor_type_str.toInt();
+
+	// retrieve the data
+	auto data = str->right(str->length() - 5);
+
 	// parse the response into corresponding structs
         // one response per sensor
-        short axisIdx = 0;
         IMUEvent *se = new IMUEvent;
+	QStringList axesVals = data.split(" ");
+	int axisIdx = 0;
+	foreach(const QString axisEntry, axesVals) {
+		switch(sensor_type) {
+			case 0:
+				se->g[axisIdx]= decodeSensorVal(axisEntry);
+				break;
+			case 1:
+				se->a[axisIdx]= decodeSensorVal(axisEntry);
+				break;
+			case 2:
+				se->m[axisIdx]= decodeSensorVal(axisEntry);
+				break;
+		}
+		if (++axisIdx > 2) break;
+	}
+
+	processSample(se);
+	delete se;
+
+	/*
+
+
 
         // check which sensor we have (S10 - gyro, S11 - acc, S12 - mag)
         short seIdx = str->contains("-S10", Qt::CaseInsensitive)?0:(str->contains("-S11", Qt::CaseInsensitive)?1:2);
@@ -41,7 +75,7 @@ parseString(const QString *str)
                 QStringList axesVals = sensorEntry.split(" ");
                 axisIdx = 0;
                 foreach(const QString axisEntry, axesVals){
-                        switch(seIdx){
+                        switch(sensor_type){
                                 case 0:
                                         se->g[axisIdx]= decodeSensorVal(axisEntry);
                                         break;
@@ -59,6 +93,9 @@ parseString(const QString *str)
         // ... and send the packed struct to update RPY
         processSample(se);
 	delete se;
+	*/
+
+	return true;
 }
 
 

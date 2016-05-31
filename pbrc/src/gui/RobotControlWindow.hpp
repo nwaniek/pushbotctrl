@@ -21,6 +21,7 @@ namespace gui {
 // forward declarations
 class NavigationWindow;
 class EventVisualizerWindow;
+class CommandInterface;
 
 /**
  * RobotControlWindow - Widget to connect to and control a robot.
@@ -45,7 +46,7 @@ private slots:
 	void onCbUserFunctionStateChanged(int state);
 	void onCmbUserFunctionIndexChanged(int index);
 	void onCbManualControlStateChanged(int state);
-
+	void onCbCommandInterfaceStateChanged(int state);
 	void onCbLaserPointerStateChanged(int state);
 	void onCbBuzzerStateChanged(int state);
 	void onCbLEDsStateChanged(int state);
@@ -53,6 +54,7 @@ private slots:
 	// 'sub'-window notifications
 	void onEventVisualizerClosing();
 	void onNavigationClosing();
+	void onCommandInterfaceClosing();
 
 	// control slots
 	void onControlConnected();
@@ -66,6 +68,8 @@ private:
 	void closeNavigationWindow();
 	void setUserFunction(unsigned index);
 	void unsetUserFunction();
+	void openCommandInterface();
+	void closeCommandInterface();
 
 	void laserpointerSettingsChanged();
 	void buzzerSettingsChanged();
@@ -77,6 +81,7 @@ private:
 	QLineEdit *_edtURI = nullptr;
 	QPushButton *_btnConnect = nullptr;
 
+	QCheckBox *_cbCommandInterface = nullptr;
 	QCheckBox *_cbManualControl = nullptr;
 	QCheckBox *_cbShowEvents = nullptr;
 	QCheckBox *_cbMagnetWindows = nullptr;
@@ -98,6 +103,7 @@ private:
 	// 'sub'-windows
 	EventVisualizerWindow *_winEventVisualizer = nullptr;
 	NavigationWindow *_winNavigation = nullptr;
+	CommandInterface *_winCommands = nullptr;
 };
 
 

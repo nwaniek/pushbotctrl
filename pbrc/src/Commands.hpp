@@ -23,6 +23,21 @@ struct Command
 
 
 /**
+ * CommandString - A plain string as command
+ */
+struct CommandString : public Command
+{
+	CommandString(std::string cmd) : _cmd(cmd) {}
+	virtual ~CommandString() {}
+	const std::string toString() const override {
+		return _cmd;
+	}
+private:
+	std::string _cmd;
+};
+
+
+/**
  * MotorDriver - Enable or Disable the Motor Driver of the Pushbots
  */
 struct MotorDriver : Command

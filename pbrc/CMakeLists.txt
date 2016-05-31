@@ -24,6 +24,7 @@ set(SRC
 	src/gui/RobotControlWindow.cpp
 	src/gui/EventVisualizerWindow.cpp
 	src/gui/NavigationWindow.cpp
+	src/gui/CommandInterface.cpp
 )
 
 set(HEADERS
@@ -42,6 +43,7 @@ set(HEADERS
 	src/gui/RobotControlWindow.hpp
 	src/gui/EventVisualizerWindow.hpp
 	src/gui/NavigationWindow.hpp
+	src/gui/CommandInterface.hpp
 )
 
 include_directories(src)

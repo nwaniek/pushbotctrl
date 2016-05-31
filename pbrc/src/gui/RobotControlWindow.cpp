@@ -22,6 +22,7 @@
 #include "UserFunction.hpp"
 #include "gui/NavigationWindow.hpp"
 #include "gui/EventVisualizerWindow.hpp"
+#include "gui/CommandInterface.hpp"
 
 namespace nst { namespace gui {
 
@@ -59,6 +60,13 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	++row;
 
+	// command
+	_cbCommandInterface = new QCheckBox("Command Interface", _centralWidget);
+	_cbCommandInterface->setCheckState(Qt::Checked);
+	layout->addWidget(_cbCommandInterface, row, 0, 1, 3);
+	connect(_cbCommandInterface, &QCheckBox::stateChanged, this, &RobotControlWindow::onCbCommandInterfaceStateChanged);
+	++row;
+
 	// manual control
 	_cbManualControl = new QCheckBox("manual control", _centralWidget);
 	layout->addWidget(_cbManualControl, row, 0, 1, 3);
@@ -89,7 +97,6 @@ RobotControlWindow(QWidget *parent, Qt::WindowFlags flags)
 	line->setFrameShadow(QFrame::Sunken);
 	layout->addWidget(line, row, 0, 1, 3);
 	}
-
 
 	++row;
 
@@ -287,6 +294,46 @@ openEventVisualizerWindow()
 	connect(_winEventVisualizer, &EventVisualizerWindow::closing, this, &RobotControlWindow::onEventVisualizerClosing);
 }
 
+
+void RobotControlWindow::
+openCommandInterface()
+{
+	const QRect geom = frameGeometry();
+
+	_winCommands = new CommandInterface(_control, mdiArea());
+	_winCommands->resize(geom.width(), 250);
+	_winCommands->show();
+
+	// move it below the command window
+	int xoffset = geom.bottomLeft().x();
+	int yoffset = geom.bottomLeft().y();
+	_winCommands->move(xoffset, yoffset);
+	_winCommands->setWindowTitle("Command Interface: " + _edtURI->text());
+
+	connect(_winCommands, &CommandInterface::closing, this, &RobotControlWindow::onCommandInterfaceClosing);
+}
+
+
+void RobotControlWindow::
+closeCommandInterface()
+{
+	if (_winCommands) _winCommands->close();
+	_winCommands = nullptr;
+}
+
+
+void RobotControlWindow::
+onCbCommandInterfaceStateChanged(int state)
+{
+	if (!_control->isConnected()) return;
+
+	if (state == Qt::Checked)
+		openCommandInterface();
+	else
+		closeCommandInterface();
+}
+
+
 void RobotControlWindow::
 openNavigationWindow()
 {
@@ -310,6 +357,7 @@ openNavigationWindow()
 
 	connect(_winNavigation, &NavigationWindow::closing, this, &RobotControlWindow::onNavigationClosing);
 }
+
 
 void RobotControlWindow::
 closeNavigationWindow()
@@ -346,6 +394,9 @@ onControlConnected()
 	}
 
 	// open windows
+	if (_cbCommandInterface->checkState() == Qt::Checked)
+		openCommandInterface();
+
 	if (_cbManualControl->checkState() == Qt::Checked)
 		openNavigationWindow();
 
@@ -381,6 +432,10 @@ onControlDisconnected()
 	old = _cbManualControl->checkState();
 	closeNavigationWindow();
 	_cbManualControl->setCheckState(old);
+
+	old = _cbCommandInterface->checkState();
+	closeCommandInterface();
+	_cbCommandInterface->setCheckState(old);
 
 	_edtURI->setReadOnly(false);
 	_edtURI->setEnabled(true);
@@ -429,15 +484,12 @@ moveEvent(QMoveEvent *ev)
 		int dx = ev->pos().x() - ev->oldPos().x();
 		int dy = ev->pos().y() - ev->oldPos().y();
 
-		if (_winEventVisualizer) {
-			int x = _winEventVisualizer->pos().x();
-			int y = _winEventVisualizer->pos().y();
-			_winEventVisualizer->move(x + dx, y + dy);
-		}
-		if (_winNavigation) {
-			int x = _winNavigation->pos().x();
-			int y = _winNavigation->pos().y();
-			_winNavigation->move(x + dx, y + dy);
+		std::vector<QMdiSubWindow*> wins = {_winEventVisualizer, _winNavigation, _winCommands};
+		for (auto *win : wins) {
+			if (!win) continue;
+			int x = win->pos().x();
+			int y = win->pos().y();
+			win->move(x + dx, y + dy);
 		}
 	}
 	ev->accept();
@@ -504,6 +556,15 @@ onNavigationClosing()
 	_winNavigation = nullptr;
 	_cbManualControl->setCheckState(Qt::Unchecked);
 }
+
+
+void RobotControlWindow::
+onCommandInterfaceClosing()
+{
+	_winCommands = nullptr;
+	_cbCommandInterface->setCheckState(Qt::Unchecked);
+}
+
 
 void RobotControlWindow::
 onCbLaserPointerStateChanged(int state)

@@ -102,8 +102,16 @@ resetRobot()
 
 	// disable laser pointer
 	_con->sendCommand(new commands::LaserPointer());
-
 }
+
+
+void RobotControl::
+sendCommand(std::string str)
+{
+	if (!_is_connected) return;
+	_con->sendCommand(new commands::CommandString(str));
+}
+
 
 void RobotControl::
 onPushbotConnected()
@@ -139,9 +147,9 @@ onResponseReceived(QString *str)
 {
 	if (!str) return;
 
-	_sensors->parseString(str);
-	emit responseReceived(str);
-        delete str;
+	// only emit a string response if it is _not_ a sensor package
+	if (!_sensors->parseString(str))
+		emit responseReceived(std::make_shared<QString>(std::move(*str)));
 }
 
 
