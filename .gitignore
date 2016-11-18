@@ -1,3 +1,2 @@
-pbrc/build/
-fakebot/build/
-pbrc/compile_commands.json
+build/
+compile_commands.json
